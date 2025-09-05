@@ -18,17 +18,8 @@ export const HeroSection = () => {
   const carouselImages = [image1, image2, image3];
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
 
-  // Crossfade entre deux phrases (sans dactylo)
-  const sentences = [
-    'La plateforme immobilière qui simplifie tout',
-    'Une expérience moderne pour locataires et propriétaires',
-  ];
-  const [idx, setIdx] = React.useState(0);
-  
-  React.useEffect(() => {
-    const id = setInterval(() => setIdx((i) => (i + 1) % sentences.length), 4000);
-    return () => clearInterval(id);
-  }, []);
+  // Phrase d'accroche unique
+  const mainSentence = 'La plateforme immobilière qui simplifie tout';
 
   // Rotation des images du carousel
   React.useEffect(() => {
@@ -45,159 +36,157 @@ export const HeroSection = () => {
         {/* Base sombre avec dégradé subtil */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         
-        {/* Réseau de connectivité - points et connexions */}
+        {/* Courbes élégantes et fluides */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none">
           <defs>
-            <linearGradient id="connection-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f97316" stopOpacity="0.9" />
+            <linearGradient id="curve-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f97316" stopOpacity="0.8" />
               <stop offset="50%" stopColor="#ea580c" stopOpacity="1" />
-              <stop offset="100%" stopColor="#dc2626" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#dc2626" stopOpacity="0.8" />
             </linearGradient>
-            <filter id="connection-glow-effect" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+            <filter id="curve-glow-effect" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur" />
               <feMerge>
                 <feMergeNode in="coloredBlur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#f97316" stopOpacity="1" />
-              <stop offset="70%" stopColor="#ea580c" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#dc2626" stopOpacity="0.6" />
-            </radialGradient>
           </defs>
           
-          {/* Points de connexion (nœuds) */}
-          {[
-            { x: 20, y: 20, size: 0.8, delay: 0 },
-            { x: 40, y: 25, size: 0.6, delay: 0.5 },
-            { x: 60, y: 15, size: 1.0, delay: 1 },
-            { x: 80, y: 22, size: 0.7, delay: 1.5 },
-            { x: 95, y: 20, size: 0.9, delay: 2 },
-            { x: 15, y: 45, size: 0.6, delay: 0.3 },
-            { x: 35, y: 50, size: 0.8, delay: 0.8 },
-            { x: 55, y: 48, size: 0.7, delay: 1.3 },
-            { x: 75, y: 52, size: 0.9, delay: 1.8 },
-            { x: 90, y: 49, size: 0.6, delay: 2.3 },
-            { x: 25, y: 75, size: 0.8, delay: 0.6 },
-            { x: 45, y: 80, size: 0.7, delay: 1.1 },
-            { x: 65, y: 78, size: 0.9, delay: 1.6 },
-            { x: 85, y: 85, size: 0.6, delay: 2.1 },
-            { x: 95, y: 80, size: 0.8, delay: 2.6 }
-          ].map((node, index) => (
-            <motion.circle
-              key={`node-${index}`}
-              cx={node.x}
-              cy={node.y}
-              r={node.size}
-              fill="url(#node-glow)"
-              filter="url(#connection-glow-effect)"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ 
-                opacity: [0, 1, 0.7, 1],
-                scale: [0, 1.2, 0.8, 1]
-              }}
-              transition={{
-                duration: 3,
-                delay: node.delay,
-                repeat: Infinity,
-                repeatDelay: 2
-              }}
-            />
-          ))}
+          {/* Courbes horizontales élégantes */}
+          <motion.path
+            d="M 0 20 Q 25 10, 50 20 T 100 20"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.8"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.8, 0]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              repeatDelay: 2
+            }}
+          />
           
-          {/* Connexions entre les points - lignes dynamiques */}
-          {[
-            // Ligne du haut
-            { from: { x: 20, y: 20 }, to: { x: 40, y: 25 }, delay: 0.2 },
-            { from: { x: 40, y: 25 }, to: { x: 60, y: 15 }, delay: 0.4 },
-            { from: { x: 60, y: 15 }, to: { x: 80, y: 22 }, delay: 0.6 },
-            { from: { x: 80, y: 22 }, to: { x: 95, y: 20 }, delay: 0.8 },
-            
-            // Ligne du milieu
-            { from: { x: 15, y: 45 }, to: { x: 35, y: 50 }, delay: 0.3 },
-            { from: { x: 35, y: 50 }, to: { x: 55, y: 48 }, delay: 0.5 },
-            { from: { x: 55, y: 48 }, to: { x: 75, y: 52 }, delay: 0.7 },
-            { from: { x: 75, y: 52 }, to: { x: 90, y: 49 }, delay: 0.9 },
-            
-            // Ligne du bas
-            { from: { x: 25, y: 75 }, to: { x: 45, y: 80 }, delay: 0.4 },
-            { from: { x: 45, y: 80 }, to: { x: 65, y: 78 }, delay: 0.6 },
-            { from: { x: 65, y: 78 }, to: { x: 85, y: 85 }, delay: 0.8 },
-            { from: { x: 85, y: 85 }, to: { x: 95, y: 80 }, delay: 1.0 },
-            
-            // Connexions verticales
-            { from: { x: 20, y: 20 }, to: { x: 15, y: 45 }, delay: 0.1 },
-            { from: { x: 40, y: 25 }, to: { x: 35, y: 50 }, delay: 0.3 },
-            { from: { x: 60, y: 15 }, to: { x: 55, y: 48 }, delay: 0.5 },
-            { from: { x: 80, y: 22 }, to: { x: 75, y: 52 }, delay: 0.7 },
-            { from: { x: 95, y: 20 }, to: { x: 90, y: 49 }, delay: 0.9 },
-            
-            // Connexions diagonales
-            { from: { x: 15, y: 45 }, to: { x: 25, y: 75 }, delay: 0.2 },
-            { from: { x: 35, y: 50 }, to: { x: 45, y: 80 }, delay: 0.4 },
-            { from: { x: 55, y: 48 }, to: { x: 65, y: 78 }, delay: 0.6 },
-            { from: { x: 75, y: 52 }, to: { x: 85, y: 85 }, delay: 0.8 },
-            { from: { x: 90, y: 49 }, to: { x: 95, y: 80 }, delay: 1.0 }
-          ].map((connection, index) => (
-            <motion.line
-              key={`connection-${index}`}
-              x1={connection.from.x}
-              y1={connection.from.y}
-              x2={connection.to.x}
-              y2={connection.to.y}
-              stroke="url(#connection-glow)"
-              strokeWidth="2"
-              filter="url(#connection-glow-effect)"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: [0, 1, 0],
-                opacity: [0, 0.8, 0]
-              }}
-              transition={{
-                duration: 4,
-                delay: connection.delay,
-                repeat: Infinity,
-                repeatDelay: 1.5
-              }}
-            />
-          ))}
+          <motion.path
+            d="M 0 50 Q 30 40, 60 50 T 100 50"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.6"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.7, 0]
+            }}
+            transition={{
+              duration: 10,
+              delay: 1,
+              repeat: Infinity,
+              repeatDelay: 3
+            }}
+          />
           
-          {/* Connexions aléatoires supplémentaires pour plus de complexité */}
-          {Array.from({ length: 12 }, (_, i) => {
-            const nodes = [
-              { x: 20, y: 20 }, { x: 40, y: 25 }, { x: 60, y: 15 }, { x: 80, y: 22 },
-              { x: 95, y: 20 }, { x: 15, y: 45 }, { x: 35, y: 50 }, { x: 55, y: 48 },
-              { x: 75, y: 52 }, { x: 90, y: 49 }, { x: 25, y: 75 }, { x: 45, y: 80 },
-              { x: 65, y: 78 }, { x: 85, y: 85 }, { x: 95, y: 80 }
-            ];
-            const from = nodes[Math.floor(Math.random() * nodes.length)];
-            const to = nodes[Math.floor(Math.random() * nodes.length)];
-            
-            return (
-              <motion.line
-                key={`random-${i}`}
-                x1={from.x}
-                y1={from.y}
-                x2={to.x}
-                y2={to.y}
-                stroke="url(#connection-glow)"
-                strokeWidth="1"
-                filter="url(#connection-glow-effect)"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ 
-                  pathLength: [0, 1, 0],
-                  opacity: [0, 0.4, 0]
-                }}
-                transition={{
-                  duration: 6,
-                  delay: i * 0.3,
-                  repeat: Infinity,
-                  repeatDelay: 3 + Math.random() * 2
-                }}
-              />
-            );
-          })}
+          <motion.path
+            d="M 0 80 Q 20 70, 40 80 T 100 80"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.5"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.6, 0]
+            }}
+            transition={{
+              duration: 12,
+              delay: 2,
+              repeat: Infinity,
+              repeatDelay: 4
+            }}
+          />
+          
+          {/* Courbes verticales élégantes */}
+          <motion.path
+            d="M 20 0 Q 15 25, 20 50 T 20 100"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.7"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.5, 0]
+            }}
+            transition={{
+              duration: 9,
+              delay: 0.5,
+              repeat: Infinity,
+              repeatDelay: 2.5
+            }}
+          />
+          
+          <motion.path
+            d="M 80 0 Q 85 30, 80 60 T 80 100"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.6"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.4, 0]
+            }}
+            transition={{
+              duration: 11,
+              delay: 1.5,
+              repeat: Infinity,
+              repeatDelay: 3.5
+            }}
+          />
+          
+          {/* Courbes diagonales fluides */}
+          <motion.path
+            d="M 0 0 Q 50 25, 100 0"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.4"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.3, 0]
+            }}
+            transition={{
+              duration: 7,
+              delay: 0.8,
+              repeat: Infinity,
+              repeatDelay: 2.2
+            }}
+          />
+          
+          <motion.path
+            d="M 0 100 Q 50 75, 100 100"
+            stroke="url(#curve-glow)"
+            strokeWidth="0.4"
+            fill="none"
+            filter="url(#curve-glow-effect)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ 
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.3, 0]
+            }}
+            transition={{
+              duration: 9,
+              delay: 2.2,
+              repeat: Infinity,
+              repeatDelay: 3.8
+            }}
+          />
         </svg>
 
         {/* Effets de distorsion subtils - harmonie avec les lignes orange */}
@@ -241,52 +230,32 @@ export const HeroSection = () => {
           />
         </div>
 
-        {/* Particules qui se déplacent le long des connexions */}
+        {/* Particules orange flottantes */}
         <div className="absolute inset-0">
-          {Array.from({ length: 20 }, (_, i) => {
-            const paths = [
-              // Lignes horizontales
-              { start: { x: 20, y: 20 }, end: { x: 95, y: 20 } },
-              { start: { x: 15, y: 45 }, end: { x: 90, y: 49 } },
-              { start: { x: 25, y: 75 }, end: { x: 95, y: 80 } },
-              // Lignes verticales
-              { start: { x: 20, y: 20 }, end: { x: 15, y: 45 } },
-              { start: { x: 60, y: 15 }, end: { x: 55, y: 48 } },
-              { start: { x: 80, y: 22 }, end: { x: 75, y: 52 } },
-              // Lignes diagonales
-              { start: { x: 15, y: 45 }, end: { x: 25, y: 75 } },
-              { start: { x: 75, y: 52 }, end: { x: 85, y: 85 } }
-            ];
-            
-            const path = paths[i % paths.length];
-            const progress = Math.random();
-            
-            return (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 rounded-full"
-                style={{
-                  left: `${path.start.x + (path.end.x - path.start.x) * progress}%`,
-                  top: `${path.start.y + (path.end.y - path.start.y) * progress}%`,
-                  background: `radial-gradient(circle, #f97316 0%, #ea580c 50%, transparent 100%)`,
-                  boxShadow: `0 0 12px #f97316`
-                }}
-                animate={{
-                  x: [0, (path.end.x - path.start.x) * 100],
-                  y: [0, (path.end.y - path.start.y) * 100],
-                  opacity: [0, 1, 0],
-                  scale: [0, 1.5, 0],
-                }}
-                transition={{
-                  duration: 8 + Math.random() * 4,
-                  delay: i * 0.2,
-                  repeat: Infinity,
-                  repeatDelay: Math.random() * 3,
-                  ease: "linear"
-                }}
-              />
-            );
-          })}
+          {Array.from({ length: 12 }, (_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1.5 h-1.5 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                background: `radial-gradient(circle, #f97316 0%, #ea580c 50%, transparent 100%)`,
+                boxShadow: `0 0 8px #f97316`
+              }}
+              animate={{
+                y: [0, -40, 0],
+                x: [0, Math.random() * 20 - 10, 0],
+                opacity: [0, 0.8, 0],
+                scale: [0, 1.2, 0],
+              }}
+              transition={{
+                duration: 6 + Math.random() * 4,
+                delay: Math.random() * 2,
+                repeat: Infinity,
+                repeatDelay: Math.random() * 3,
+              }}
+            />
+          ))}
         </div>
 
         {/* Lignes d'énergie orange qui traversent l'écran */}
@@ -356,18 +325,14 @@ export const HeroSection = () => {
               <div className="space-y-6">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
                   <span className="sr-only">Message principal</span>
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={idx}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.5 }}
-                      className="inline-block"
-                    >
-                      {sentences[idx]}
-                    </motion.span>
-                  </AnimatePresence>
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="inline-block"
+                  >
+                    {mainSentence}
+                  </motion.span>
                 </h1>
 
                 <p className="text-base sm:text-lg text-slate-200 max-w-[50ch] mx-auto lg:mx-0 leading-relaxed">
@@ -394,30 +359,54 @@ export const HeroSection = () => {
               </div>
             </motion.div>
 
-            {/* Carousel d'images à droite */}
+            {/* Carousel d'images à droite - effet cube */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl"
+              className="relative h-[300px] sm:h-[350px] lg:h-[400px] w-[250px] sm:w-[300px] lg:w-[350px] mx-auto lg:mx-0"
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentImageIndex}
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="absolute inset-0"
-                >
-                  <img
-                    src={carouselImages[currentImageIndex]}
-                    alt={`Slide ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                </motion.div>
-              </AnimatePresence>
+              <div className="relative w-full h-full perspective-1000">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentImageIndex}
+                    initial={{ 
+                      rotateY: 90,
+                      opacity: 0,
+                      scale: 0.8
+                    }}
+                    animate={{ 
+                      rotateY: 0,
+                      opacity: 1,
+                      scale: 1
+                    }}
+                    exit={{ 
+                      rotateY: -90,
+                      opacity: 0,
+                      scale: 0.8
+                    }}
+                    transition={{ 
+                      duration: 1.2, 
+                      ease: [0.4, 0, 0.2, 1],
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 15
+                    }}
+                    className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
+                    style={{
+                      transformStyle: "preserve-3d",
+                      backfaceVisibility: "hidden"
+                    }}
+                  >
+                    <img
+                      src={carouselImages[currentImageIndex]}
+                      alt={`Slide ${currentImageIndex + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
               {/* Indicateurs de navigation */}
               <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -435,13 +424,13 @@ export const HeroSection = () => {
               </div>
 
               {/* Overlay avec informations */}
-              <div className="absolute top-6 left-6 right-6">
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                  <h3 className="text-white font-semibold text-lg mb-2">
+              <div className="absolute top-4 left-4 right-4">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/20">
+                  <h3 className="text-white font-semibold text-base mb-1">
                     Découvrez nos propriétés
                   </h3>
-                  <p className="text-white/80 text-sm">
-                    Plus de 1000 biens disponibles dans toute la région
+                  <p className="text-white/80 text-xs">
+                    Plus de 1000 biens disponibles
                   </p>
                 </div>
               </div>
