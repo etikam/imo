@@ -46,7 +46,7 @@ export const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         
         {/* Réseau de connectivité - points et connexions */}
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" fill="none">
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none">
           <defs>
             <linearGradient id="connection-glow" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#f97316" stopOpacity="0.9" />
@@ -69,21 +69,21 @@ export const HeroSection = () => {
           
           {/* Points de connexion (nœuds) */}
           {[
-            { x: 200, y: 150, size: 8, delay: 0 },
-            { x: 400, y: 200, size: 6, delay: 0.5 },
-            { x: 600, y: 120, size: 10, delay: 1 },
-            { x: 800, y: 180, size: 7, delay: 1.5 },
-            { x: 1000, y: 160, size: 9, delay: 2 },
-            { x: 150, y: 350, size: 6, delay: 0.3 },
-            { x: 350, y: 400, size: 8, delay: 0.8 },
-            { x: 550, y: 380, size: 7, delay: 1.3 },
-            { x: 750, y: 420, size: 9, delay: 1.8 },
-            { x: 950, y: 390, size: 6, delay: 2.3 },
-            { x: 250, y: 600, size: 8, delay: 0.6 },
-            { x: 450, y: 650, size: 7, delay: 1.1 },
-            { x: 650, y: 620, size: 9, delay: 1.6 },
-            { x: 850, y: 680, size: 6, delay: 2.1 },
-            { x: 1050, y: 640, size: 8, delay: 2.6 }
+            { x: 20, y: 20, size: 0.8, delay: 0 },
+            { x: 40, y: 25, size: 0.6, delay: 0.5 },
+            { x: 60, y: 15, size: 1.0, delay: 1 },
+            { x: 80, y: 22, size: 0.7, delay: 1.5 },
+            { x: 95, y: 20, size: 0.9, delay: 2 },
+            { x: 15, y: 45, size: 0.6, delay: 0.3 },
+            { x: 35, y: 50, size: 0.8, delay: 0.8 },
+            { x: 55, y: 48, size: 0.7, delay: 1.3 },
+            { x: 75, y: 52, size: 0.9, delay: 1.8 },
+            { x: 90, y: 49, size: 0.6, delay: 2.3 },
+            { x: 25, y: 75, size: 0.8, delay: 0.6 },
+            { x: 45, y: 80, size: 0.7, delay: 1.1 },
+            { x: 65, y: 78, size: 0.9, delay: 1.6 },
+            { x: 85, y: 85, size: 0.6, delay: 2.1 },
+            { x: 95, y: 80, size: 0.8, delay: 2.6 }
           ].map((node, index) => (
             <motion.circle
               key={`node-${index}`}
@@ -109,36 +109,36 @@ export const HeroSection = () => {
           {/* Connexions entre les points - lignes dynamiques */}
           {[
             // Ligne du haut
-            { from: { x: 200, y: 150 }, to: { x: 400, y: 200 }, delay: 0.2 },
-            { from: { x: 400, y: 200 }, to: { x: 600, y: 120 }, delay: 0.4 },
-            { from: { x: 600, y: 120 }, to: { x: 800, y: 180 }, delay: 0.6 },
-            { from: { x: 800, y: 180 }, to: { x: 1000, y: 160 }, delay: 0.8 },
+            { from: { x: 20, y: 20 }, to: { x: 40, y: 25 }, delay: 0.2 },
+            { from: { x: 40, y: 25 }, to: { x: 60, y: 15 }, delay: 0.4 },
+            { from: { x: 60, y: 15 }, to: { x: 80, y: 22 }, delay: 0.6 },
+            { from: { x: 80, y: 22 }, to: { x: 95, y: 20 }, delay: 0.8 },
             
             // Ligne du milieu
-            { from: { x: 150, y: 350 }, to: { x: 350, y: 400 }, delay: 0.3 },
-            { from: { x: 350, y: 400 }, to: { x: 550, y: 380 }, delay: 0.5 },
-            { from: { x: 550, y: 380 }, to: { x: 750, y: 420 }, delay: 0.7 },
-            { from: { x: 750, y: 420 }, to: { x: 950, y: 390 }, delay: 0.9 },
+            { from: { x: 15, y: 45 }, to: { x: 35, y: 50 }, delay: 0.3 },
+            { from: { x: 35, y: 50 }, to: { x: 55, y: 48 }, delay: 0.5 },
+            { from: { x: 55, y: 48 }, to: { x: 75, y: 52 }, delay: 0.7 },
+            { from: { x: 75, y: 52 }, to: { x: 90, y: 49 }, delay: 0.9 },
             
             // Ligne du bas
-            { from: { x: 250, y: 600 }, to: { x: 450, y: 650 }, delay: 0.4 },
-            { from: { x: 450, y: 650 }, to: { x: 650, y: 620 }, delay: 0.6 },
-            { from: { x: 650, y: 620 }, to: { x: 850, y: 680 }, delay: 0.8 },
-            { from: { x: 850, y: 680 }, to: { x: 1050, y: 640 }, delay: 1.0 },
+            { from: { x: 25, y: 75 }, to: { x: 45, y: 80 }, delay: 0.4 },
+            { from: { x: 45, y: 80 }, to: { x: 65, y: 78 }, delay: 0.6 },
+            { from: { x: 65, y: 78 }, to: { x: 85, y: 85 }, delay: 0.8 },
+            { from: { x: 85, y: 85 }, to: { x: 95, y: 80 }, delay: 1.0 },
             
             // Connexions verticales
-            { from: { x: 200, y: 150 }, to: { x: 150, y: 350 }, delay: 0.1 },
-            { from: { x: 400, y: 200 }, to: { x: 350, y: 400 }, delay: 0.3 },
-            { from: { x: 600, y: 120 }, to: { x: 550, y: 380 }, delay: 0.5 },
-            { from: { x: 800, y: 180 }, to: { x: 750, y: 420 }, delay: 0.7 },
-            { from: { x: 1000, y: 160 }, to: { x: 950, y: 390 }, delay: 0.9 },
+            { from: { x: 20, y: 20 }, to: { x: 15, y: 45 }, delay: 0.1 },
+            { from: { x: 40, y: 25 }, to: { x: 35, y: 50 }, delay: 0.3 },
+            { from: { x: 60, y: 15 }, to: { x: 55, y: 48 }, delay: 0.5 },
+            { from: { x: 80, y: 22 }, to: { x: 75, y: 52 }, delay: 0.7 },
+            { from: { x: 95, y: 20 }, to: { x: 90, y: 49 }, delay: 0.9 },
             
             // Connexions diagonales
-            { from: { x: 150, y: 350 }, to: { x: 250, y: 600 }, delay: 0.2 },
-            { from: { x: 350, y: 400 }, to: { x: 450, y: 650 }, delay: 0.4 },
-            { from: { x: 550, y: 380 }, to: { x: 650, y: 620 }, delay: 0.6 },
-            { from: { x: 750, y: 420 }, to: { x: 850, y: 680 }, delay: 0.8 },
-            { from: { x: 950, y: 390 }, to: { x: 1050, y: 640 }, delay: 1.0 }
+            { from: { x: 15, y: 45 }, to: { x: 25, y: 75 }, delay: 0.2 },
+            { from: { x: 35, y: 50 }, to: { x: 45, y: 80 }, delay: 0.4 },
+            { from: { x: 55, y: 48 }, to: { x: 65, y: 78 }, delay: 0.6 },
+            { from: { x: 75, y: 52 }, to: { x: 85, y: 85 }, delay: 0.8 },
+            { from: { x: 90, y: 49 }, to: { x: 95, y: 80 }, delay: 1.0 }
           ].map((connection, index) => (
             <motion.line
               key={`connection-${index}`}
@@ -166,10 +166,10 @@ export const HeroSection = () => {
           {/* Connexions aléatoires supplémentaires pour plus de complexité */}
           {Array.from({ length: 12 }, (_, i) => {
             const nodes = [
-              { x: 200, y: 150 }, { x: 400, y: 200 }, { x: 600, y: 120 }, { x: 800, y: 180 },
-              { x: 1000, y: 160 }, { x: 150, y: 350 }, { x: 350, y: 400 }, { x: 550, y: 380 },
-              { x: 750, y: 420 }, { x: 950, y: 390 }, { x: 250, y: 600 }, { x: 450, y: 650 },
-              { x: 650, y: 620 }, { x: 850, y: 680 }, { x: 1050, y: 640 }
+              { x: 20, y: 20 }, { x: 40, y: 25 }, { x: 60, y: 15 }, { x: 80, y: 22 },
+              { x: 95, y: 20 }, { x: 15, y: 45 }, { x: 35, y: 50 }, { x: 55, y: 48 },
+              { x: 75, y: 52 }, { x: 90, y: 49 }, { x: 25, y: 75 }, { x: 45, y: 80 },
+              { x: 65, y: 78 }, { x: 85, y: 85 }, { x: 95, y: 80 }
             ];
             const from = nodes[Math.floor(Math.random() * nodes.length)];
             const to = nodes[Math.floor(Math.random() * nodes.length)];
@@ -246,16 +246,16 @@ export const HeroSection = () => {
           {Array.from({ length: 20 }, (_, i) => {
             const paths = [
               // Lignes horizontales
-              { start: { x: 200, y: 150 }, end: { x: 1000, y: 160 } },
-              { start: { x: 150, y: 350 }, end: { x: 950, y: 390 } },
-              { start: { x: 250, y: 600 }, end: { x: 1050, y: 640 } },
+              { start: { x: 20, y: 20 }, end: { x: 95, y: 20 } },
+              { start: { x: 15, y: 45 }, end: { x: 90, y: 49 } },
+              { start: { x: 25, y: 75 }, end: { x: 95, y: 80 } },
               // Lignes verticales
-              { start: { x: 200, y: 150 }, end: { x: 150, y: 350 } },
-              { start: { x: 600, y: 120 }, end: { x: 550, y: 380 } },
-              { start: { x: 800, y: 180 }, end: { x: 750, y: 420 } },
+              { start: { x: 20, y: 20 }, end: { x: 15, y: 45 } },
+              { start: { x: 60, y: 15 }, end: { x: 55, y: 48 } },
+              { start: { x: 80, y: 22 }, end: { x: 75, y: 52 } },
               // Lignes diagonales
-              { start: { x: 150, y: 350 }, end: { x: 250, y: 600 } },
-              { start: { x: 750, y: 420 }, end: { x: 850, y: 680 } }
+              { start: { x: 15, y: 45 }, end: { x: 25, y: 75 } },
+              { start: { x: 75, y: 52 }, end: { x: 85, y: 85 } }
             ];
             
             const path = paths[i % paths.length];
@@ -266,14 +266,14 @@ export const HeroSection = () => {
                 key={i}
                 className="absolute w-2 h-2 rounded-full"
                 style={{
-                  left: `${path.start.x + (path.end.x - path.start.x) * progress}px`,
-                  top: `${path.start.y + (path.end.y - path.start.y) * progress}px`,
+                  left: `${path.start.x + (path.end.x - path.start.x) * progress}%`,
+                  top: `${path.start.y + (path.end.y - path.start.y) * progress}%`,
                   background: `radial-gradient(circle, #f97316 0%, #ea580c 50%, transparent 100%)`,
                   boxShadow: `0 0 12px #f97316`
                 }}
                 animate={{
-                  x: [0, path.end.x - path.start.x],
-                  y: [0, path.end.y - path.start.y],
+                  x: [0, (path.end.x - path.start.x) * 100],
+                  y: [0, (path.end.y - path.start.y) * 100],
                   opacity: [0, 1, 0],
                   scale: [0, 1.5, 0],
                 }}
@@ -344,7 +344,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         >
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 lg:py-20">
             {/* Contenu gauche */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -399,7 +399,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="relative h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl"
+              className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl"
             >
               <AnimatePresence mode="wait">
                 <motion.div
