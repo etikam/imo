@@ -1,0 +1,22 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HomePage } from './pages/HomePage';
+import { ContactPage } from './pages/ContactPage';
+import { ProprietairePage } from './pages/ProprietairePage';
+import { Layout } from './components/layout/Layout';
+import './index.css';
+
+function App() {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/proprietaire" element={<ProprietairePage />} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
+}
+
+export default App;
