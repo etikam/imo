@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const IllustrationSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <section className="py-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Titre de section */}
         <motion.div
@@ -12,12 +12,12 @@ export const IllustrationSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-4"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
             Comment ITCHO vous connecte
           </h2>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+          <p className="text-base text-slate-300 max-w-2xl mx-auto">
             Une plateforme qui facilite la rencontre entre locataires et propriétaires
           </p>
         </motion.div>
@@ -28,7 +28,7 @@ export const IllustrationSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
           viewport={{ once: true }}
-          className="relative mx-auto max-w-5xl h-[400px] md:h-[450px] lg:h-[500px]"
+          className="relative mx-auto max-w-5xl h-[280px] md:h-[320px] lg:h-[360px]"
         >
           {/* SVG connections */}
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 500" fill="none">
@@ -101,8 +101,8 @@ export const IllustrationSection = () => {
             viewport={{ once: true }}
             className="absolute left-0 top-1/2 -translate-y-1/2"
           >
-            <div className="rounded-2xl border border-indigo-200/30 bg-white/10 backdrop-blur-md p-6 w-[320px] shadow-xl">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="rounded-xl border border-indigo-200/30 bg-white/10 backdrop-blur-md p-4 w-[280px] shadow-lg">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
                   <Search className="h-6 w-6" />
                 </div>
@@ -111,7 +111,7 @@ export const IllustrationSection = () => {
                   <div className="text-sm text-indigo-300/80">Vous cherchez un logement ?</div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-4">
                 {['Recherche avancée', 'Visites virtuelles', 'Dossiers simplifiés', 'Alertes personnalisées'].map((f) => (
                   <div key={f} className="flex items-center text-sm text-indigo-200">
                     <CheckCircle2 className="w-4 h-4 text-indigo-400 mr-2 flex-shrink-0" />
@@ -136,8 +136,8 @@ export const IllustrationSection = () => {
             viewport={{ once: true }}
             className="absolute right-0 top-1/2 -translate-y-1/2"
           >
-            <div className="rounded-2xl border border-violet-200/30 bg-white/10 backdrop-blur-md p-6 w-[320px] shadow-xl">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="rounded-xl border border-violet-200/30 bg-white/10 backdrop-blur-md p-4 w-[280px] shadow-lg">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white">
                   <Key className="h-6 w-6" />
                 </div>
@@ -146,7 +146,7 @@ export const IllustrationSection = () => {
                   <div className="text-sm text-violet-300/80">Vous avez un bien à gérer ?</div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-4">
                 {['Gestion locative', 'Suivi financier', 'Maintenance', 'Locataires qualifiés'].map((f) => (
                   <div key={f} className="flex items-center text-sm text-violet-200">
                     <CheckCircle2 className="w-4 h-4 text-violet-400 mr-2 flex-shrink-0" />
@@ -170,7 +170,7 @@ export const IllustrationSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="md:hidden mx-auto max-w-sm relative h-[280px] mt-8"
+          className="md:hidden mx-auto max-w-sm relative h-[200px] mt-4"
         >
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 360 280" fill="none">
             <defs>

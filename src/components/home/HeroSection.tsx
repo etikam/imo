@@ -1,6 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Building2, Home } from 'lucide-react';
 import { FloatingElement } from '../ui/FloatingElement';
+import { ImageStack } from '../ui/ImageStack';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -16,18 +17,9 @@ export const HeroSection = () => {
   ];
 
   const carouselImages = [image1, image2, image3];
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
 
   // Phrase d'accroche unique
   const mainSentence = 'La plateforme immobilière qui simplifie tout';
-
-  // Rotation des images du carousel
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [carouselImages.length]);
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -313,13 +305,13 @@ export const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         >
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 lg:py-20">
+          <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center py-12 lg:py-20">
             {/* Contenu gauche */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="space-y-8 text-center lg:text-left"
+              className="lg:col-span-3 space-y-8 text-center lg:text-left"
             >
               {/* Titre et sous-titre */}
               <div className="space-y-6">
@@ -359,81 +351,25 @@ export const HeroSection = () => {
               </div>
             </motion.div>
 
-            {/* Carousel d'images à droite - effet cube */}
+            {/* Stack d'images avec transition fluide */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="relative h-[300px] sm:h-[350px] lg:h-[400px] w-[250px] sm:w-[300px] lg:w-[350px] mx-auto lg:mx-0"
+              className="lg:col-span-2 mx-auto lg:mx-0"
             >
-              <div className="relative w-full h-full perspective-1000">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentImageIndex}
-                    initial={{ 
-                      rotateY: 90,
-                      opacity: 0,
-                      scale: 0.8
-                    }}
-                    animate={{ 
-                      rotateY: 0,
-                      opacity: 1,
-                      scale: 1
-                    }}
-                    exit={{ 
-                      rotateY: -90,
-                      opacity: 0,
-                      scale: 0.8
-                    }}
-                    transition={{ 
-                      duration: 1.2, 
-                      ease: [0.4, 0, 0.2, 1],
-                      type: "spring",
-                      stiffness: 100,
-                      damping: 15
-                    }}
-                    className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
-                    style={{
-                      transformStyle: "preserve-3d",
-                      backfaceVisibility: "hidden"
-                    }}
-                  >
-                    <img
-                      src={carouselImages[currentImageIndex]}
-                      alt={`Slide ${currentImageIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Indicateurs de navigation */}
-              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {carouselImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      index === currentImageIndex
-                        ? 'bg-white scale-125'
-                        : 'bg-white/50 hover:bg-white/75'
-                    }`}
-                  />
-                ))}
-              </div>
-
-              {/* Overlay avec informations */}
-              <div className="absolute top-4 left-4 right-4">
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/20">
-                  <h3 className="text-white font-semibold text-base mb-1">
-                    Découvrez nos propriétés
-                  </h3>
-                  <p className="text-white/80 text-xs">
-                    Plus de 1000 biens disponibles
-                  </p>
-                </div>
-              </div>
+              <ImageStack
+                images={carouselImages}
+                interval={5000}
+                height="h-[300px] sm:h-[350px] lg:h-[400px]"
+                width="w-[250px] sm:w-[300px] lg:w-[350px]"
+                showIndicators={true}
+                showParticles={true}
+                particleCount={4}
+                stackDepth="pronounced"
+                borderStyle="visible"
+                shadowIntensity="strong"
+              />
             </motion.div>
           </div>
         </motion.div>
