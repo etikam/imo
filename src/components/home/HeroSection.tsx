@@ -245,15 +245,15 @@ export const HeroSection = () => {
                 delay: Math.random() * 2,
                 repeat: Infinity,
                 repeatDelay: Math.random() * 3,
-              }}
-            />
-          ))}
-        </div>
+            }}
+          />
+        ))}
+      </div>
 
         {/* Lignes d'énergie orange qui traversent l'écran */}
         <div className="absolute inset-0">
           {Array.from({ length: 6 }, (_, i) => (
-            <motion.div
+        <motion.div
               key={i}
               className="absolute h-px w-full"
               style={{
@@ -307,31 +307,31 @@ export const HeroSection = () => {
         >
           <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center py-12 lg:py-20">
             {/* Contenu gauche */}
-            <motion.div
+          <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
               className="lg:col-span-3 space-y-8 text-center lg:text-left"
-            >
+          >
               {/* Titre et sous-titre */}
               <div className="space-y-6">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
-                  <span className="sr-only">Message principal</span>
-                  <motion.span
+              <span className="sr-only">Message principal</span>
+                <motion.span
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="inline-block"
-                  >
+                  className="inline-block"
+                >
                     {mainSentence}
-                  </motion.span>
-                </h1>
+                </motion.span>
+            </h1>
 
                 <p className="text-base sm:text-lg text-slate-200 max-w-[50ch] mx-auto lg:mx-0 leading-relaxed">
-                  Gérez vos biens ou trouvez votre logement idéal avec une expérience 
-                  moderne et intuitive, conçue pour les propriétaires et locataires.
-                </p>
-              </div>
+              Gérez vos biens ou trouvez votre logement idéal avec une expérience 
+              moderne et intuitive, conçue pour les propriétaires et locataires.
+            </p>
+            </div>
 
               {/* Boutons d'action */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -348,8 +348,8 @@ export const HeroSection = () => {
                 >
                   En savoir plus
                 </Link>
-              </div>
-            </motion.div>
+            </div>
+          </motion.div>
 
             {/* Stack d'images avec transition fluide */}
             <motion.div

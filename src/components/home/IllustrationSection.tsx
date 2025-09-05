@@ -145,6 +145,7 @@ export const IllustrationSection = () => {
                   <div className="text-lg font-semibold text-violet-300">Propriétaire</div>
                   <div className="text-sm text-violet-300/80">Vous avez un bien à gérer ?</div>
                 </div>
+
               </div>
               <div className="grid grid-cols-2 gap-2 mb-4">
                 {['Gestion locative', 'Suivi financier', 'Maintenance', 'Locataires qualifiés'].map((f) => (
@@ -228,6 +229,7 @@ export const IllustrationSection = () => {
                 <div className="text-xs font-semibold tracking-wide text-indigo-300 uppercase">ITCHO</div>
                 <div className="text-[10px] text-slate-300">Intermédiaire</div>
               </div>
+
             </div>
           </div>
 
@@ -254,6 +256,7 @@ export const IllustrationSection = () => {
                 <div className="text-sm font-semibold text-violet-300">Propriétaire</div>
                 <div className="text-xs text-violet-300/80">Bien à gérer ?</div>
               </div>
+
             </div>
           </div>
         </motion.div>
