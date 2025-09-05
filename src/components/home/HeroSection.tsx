@@ -23,21 +23,136 @@ export const HeroSection = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Background sophistiqué - espace-temps qui se tord */}
+      {/* Background sophistiqué - vide spatial */}
       <div className="absolute inset-0">
-        {/* Base sombre avec dégradé subtil */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        {/* Vide spatial sombre avec étoiles */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950" />
+        
+        {/* Étoiles avec profondeur */}
+        <div className="absolute inset-0">
+          {/* Étoiles lointaines (petites) */}
+          {Array.from({ length: 60 }).map((_, i) => (
+            <motion.div
+              key={`far-${i}`}
+              className="absolute w-0.5 h-0.5 bg-orange-300 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                zIndex: 1,
+              }}
+              animate={{
+                opacity: [0.2, 0.6, 0.2],
+                scale: [0.3, 0.8, 0.3],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            />
+          ))}
+          
+          {/* Étoiles moyennes */}
+          {Array.from({ length: 30 }).map((_, i) => (
+            <motion.div
+              key={`medium-${i}`}
+              className="absolute w-1 h-1 bg-orange-400 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                zIndex: 2,
+              }}
+              animate={{
+                opacity: [0.4, 0.9, 0.4],
+                scale: [0.6, 1.2, 0.6],
+              }}
+              transition={{
+                duration: 2.5 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2.5,
+              }}
+            />
+          ))}
+          
+          {/* Étoiles proches */}
+          {Array.from({ length: 15 }).map((_, i) => (
+            <motion.div
+              key={`close-${i}`}
+              className="absolute w-1.5 h-1.5 bg-orange-500 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                zIndex: 3,
+              }}
+              animate={{
+                opacity: [0.5, 1, 0.5],
+                scale: [0.8, 1.4, 0.8],
+              }}
+              transition={{
+                duration: 2 + Math.random() * 1.5,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+          
+          {/* Étoiles brillantes (premier plan) */}
+          {Array.from({ length: 8 }).map((_, i) => (
+            <motion.div
+              key={`bright-${i}`}
+              className="absolute w-2 h-2 bg-orange-300 rounded-full shadow-lg"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                zIndex: 4,
+                boxShadow: '0 0 10px rgba(251, 146, 60, 0.8)',
+              }}
+              animate={{
+                opacity: [0.6, 1, 0.6],
+                scale: [0.9, 1.6, 0.9],
+              }}
+              transition={{
+                duration: 1.5 + Math.random() * 1,
+                repeat: Infinity,
+                delay: Math.random() * 1.5,
+              }}
+            />
+          ))}
+          
+          {/* Étoiles géantes (très proches) */}
+          {Array.from({ length: 3 }).map((_, i) => (
+            <motion.div
+              key={`giant-${i}`}
+              className="absolute w-3 h-3 bg-orange-200 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                zIndex: 5,
+                boxShadow: '0 0 20px rgba(251, 146, 60, 1)',
+              }}
+              animate={{
+                opacity: [0.7, 1, 0.7],
+                scale: [1, 1.8, 1],
+              }}
+              transition={{
+                duration: 1 + Math.random() * 0.5,
+                repeat: Infinity,
+                delay: Math.random() * 1,
+              }}
+            />
+          ))}
+        </div>
         
         {/* Courbes élégantes et fluides */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none">
           <defs>
             <linearGradient id="curve-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f97316" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#ea580c" stopOpacity="1" />
-              <stop offset="100%" stopColor="#dc2626" stopOpacity="0.8" />
+              <stop offset="0%" stopColor="#f97316" stopOpacity="1" />
+              <stop offset="50%" stopColor="#ea580c" stopOpacity="1.2" />
+              <stop offset="100%" stopColor="#dc2626" stopOpacity="1" />
             </linearGradient>
             <filter id="curve-glow-effect" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+              <feGaussianBlur stdDeviation="4" result="coloredBlur" />
               <feMerge>
                 <feMergeNode in="coloredBlur" />
                 <feMergeNode in="SourceGraphic" />
@@ -49,7 +164,7 @@ export const HeroSection = () => {
           <motion.path
             d="M 0 20 Q 25 10, 50 20 T 100 20"
             stroke="url(#curve-glow)"
-            strokeWidth="0.8"
+            strokeWidth="1.2"
             fill="none"
             filter="url(#curve-glow-effect)"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -67,7 +182,7 @@ export const HeroSection = () => {
           <motion.path
             d="M 0 50 Q 30 40, 60 50 T 100 50"
             stroke="url(#curve-glow)"
-            strokeWidth="0.6"
+            strokeWidth="1.0"
             fill="none"
             filter="url(#curve-glow-effect)"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -86,7 +201,7 @@ export const HeroSection = () => {
           <motion.path
             d="M 0 80 Q 20 70, 40 80 T 100 80"
             stroke="url(#curve-glow)"
-            strokeWidth="0.5"
+            strokeWidth="0.8"
             fill="none"
             filter="url(#curve-glow-effect)"
             initial={{ pathLength: 0, opacity: 0 }}

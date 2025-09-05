@@ -12,23 +12,23 @@ export const IllustrationSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-4"
+          className="text-center mb-6 sm:mb-8"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
             Comment ITCHO vous connecte
           </h2>
-          <p className="text-base text-slate-300 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto px-4">
             Une plateforme qui facilite la rencontre entre locataires et propriétaires
           </p>
         </motion.div>
 
-        {/* Illustration principale */}
+        {/* Illustration principale - Desktop */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
           viewport={{ once: true }}
-          className="relative mx-auto max-w-5xl h-[280px] md:h-[320px] lg:h-[360px]"
+          className="relative mx-auto max-w-5xl h-[280px] md:h-[320px] lg:h-[360px] hidden md:block"
         >
           {/* SVG connections */}
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 500" fill="none">
@@ -101,7 +101,7 @@ export const IllustrationSection = () => {
             viewport={{ once: true }}
             className="absolute left-0 top-1/2 -translate-y-1/2"
           >
-            <div className="rounded-xl border border-indigo-200/30 bg-white/10 backdrop-blur-md p-4 w-[280px] shadow-lg">
+            <div className="rounded-xl border border-indigo-200/30 bg-white/10 backdrop-blur-md p-4 w-[260px] lg:w-[280px] shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
                   <Search className="h-6 w-6" />
@@ -136,7 +136,7 @@ export const IllustrationSection = () => {
             viewport={{ once: true }}
             className="absolute right-0 top-1/2 -translate-y-1/2"
           >
-            <div className="rounded-xl border border-violet-200/30 bg-white/10 backdrop-blur-md p-4 w-[280px] shadow-lg">
+            <div className="rounded-xl border border-violet-200/30 bg-white/10 backdrop-blur-md p-4 w-[260px] lg:w-[280px] shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white">
                   <Key className="h-6 w-6" />
@@ -171,7 +171,7 @@ export const IllustrationSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="md:hidden mx-auto max-w-sm relative h-[200px] mt-4"
+          className="md:hidden mx-auto max-w-xs sm:max-w-sm relative h-[180px] sm:h-[200px] mt-4"
         >
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 360 280" fill="none">
             <defs>
@@ -219,44 +219,42 @@ export const IllustrationSection = () => {
           </svg>
 
           {/* Top node: ITCHO */}
-          <div className="absolute left-1/2 top-[48px] -translate-x-1/2">
+          <div className="absolute left-1/2 top-[40px] sm:top-[48px] -translate-x-1/2">
             <div className="relative">
-              <div className="absolute -inset-3 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 blur-lg" />
-                              <div className="relative flex flex-col items-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-3 shadow-lg">
-                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-                  <Shield className="h-5 w-5 text-white" />
+              <div className="absolute -inset-2 sm:-inset-3 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 blur-lg" />
+              <div className="relative flex flex-col items-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-4 sm:px-5 py-2 sm:py-3 shadow-lg">
+                <div className="mb-1 sm:mb-2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
-                <div className="text-xs font-semibold tracking-wide text-indigo-300 uppercase">ITCHO</div>
-                <div className="text-[10px] text-slate-300">Intermédiaire</div>
+                <div className="text-[10px] sm:text-xs font-semibold tracking-wide text-indigo-300 uppercase">ITCHO</div>
+                <div className="text-[8px] sm:text-[10px] text-slate-300">Intermédiaire</div>
               </div>
-
             </div>
           </div>
 
           {/* Left node: Locataire */}
-          <div className="absolute left-4 bottom-8">
-            <div className="flex items-center gap-3 rounded-lg border border-indigo-200/30 bg-white/10 backdrop-blur-md px-4 py-3 shadow-lg">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
-                <Search className="h-5 w-5" />
+          <div className="absolute left-2 sm:left-4 bottom-6 sm:bottom-8">
+            <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-indigo-200/30 bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 shadow-lg">
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <div className="text-sm font-semibold text-indigo-300">Locataire</div>
-                <div className="text-xs text-indigo-300/80">Logement ?</div>
+                <div className="text-xs sm:text-sm font-semibold text-indigo-300">Locataire</div>
+                <div className="text-[10px] sm:text-xs text-indigo-300/80">Logement ?</div>
               </div>
             </div>
           </div>
 
           {/* Right node: Propriétaire */}
-          <div className="absolute right-4 bottom-8">
-            <div className="flex items-center gap-3 rounded-lg border border-violet-200/30 bg-white/10 backdrop-blur-md px-4 py-3 shadow-lg">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white">
-                <Key className="h-5 w-5" />
+          <div className="absolute right-2 sm:right-4 bottom-6 sm:bottom-8">
+            <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-violet-200/30 bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 shadow-lg">
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white">
+                <Key className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <div className="text-sm font-semibold text-violet-300">Propriétaire</div>
-                <div className="text-xs text-violet-300/80">Bien à gérer ?</div>
+                <div className="text-xs sm:text-sm font-semibold text-violet-300">Propriétaire</div>
+                <div className="text-[10px] sm:text-xs text-violet-300/80">Bien à gérer ?</div>
               </div>
-
             </div>
           </div>
         </motion.div>

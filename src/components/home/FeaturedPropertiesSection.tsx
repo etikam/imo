@@ -143,16 +143,16 @@ const PropertyCard: React.FC<{
       <div className={`
         relative overflow-hidden rounded-2xl shadow-lg transition-all duration-500
         ${isActive 
-          ? 'shadow-2xl ring-2 ring-indigo-500/50 scale-105' 
+          ? 'shadow-2xl ring-2 ring-indigo-500/50' 
           : 'shadow-lg hover:shadow-xl'
         }
       `}>
         {/* Image de la propriété */}
-        <div className="relative h-64 overflow-hidden">
+        <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
           <img
             src={property.image}
             alt={property.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           
           {/* Overlay gradient */}
@@ -197,54 +197,54 @@ const PropertyCard: React.FC<{
         </div>
 
         {/* Contenu de la carte */}
-        <div className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 border-t border-slate-700/50">
+        <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-slate-800 to-slate-900 border-t border-slate-700/50">
           {/* Prix */}
-          <div className="mb-3">
+          <div className="mb-2 sm:mb-3">
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold text-white">{property.price}</span>
-              <span className="text-sm text-slate-400">{property.currency}</span>
-              <span className="text-sm text-slate-500">{property.period}</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-white">{property.price}</span>
+              <span className="text-xs sm:text-sm text-slate-400">{property.currency}</span>
+              <span className="text-xs sm:text-sm text-slate-500">{property.period}</span>
             </div>
           </div>
 
           {/* Titre */}
-          <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1">
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2 line-clamp-1">
             {property.title}
           </h3>
 
           {/* Localisation */}
-          <div className="flex items-center gap-2 mb-4 text-slate-400">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm">{property.location}</span>
+          <div className="flex items-center gap-2 mb-3 sm:mb-4 text-slate-400">
+            <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="text-xs sm:text-sm">{property.location}</span>
           </div>
 
           {/* Caractéristiques */}
-          <div className="flex items-center gap-4 mb-4 text-sm text-slate-400">
+          <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm text-slate-400">
             <div className="flex items-center gap-1">
-              <Bed className="w-4 h-4" />
+              <Bed className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{property.bedrooms}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Bath className="w-4 h-4" />
+              <Bath className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{property.bathrooms}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Square className="w-4 h-4" />
+              <Square className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{property.area}m²</span>
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-sm text-slate-300 mb-4 line-clamp-2">
+          <p className="text-xs sm:text-sm text-slate-300 mb-3 sm:mb-4 line-clamp-2">
             {property.description}
           </p>
 
           {/* Bouton voir plus */}
           <motion.button
             whileHover={{ x: 5 }}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300"
+            className="w-full flex items-center justify-center gap-2 py-2 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 text-xs sm:text-sm"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Voir les détails</span>
           </motion.button>
         </div>
@@ -482,23 +482,23 @@ export const FeaturedPropertiesSection: React.FC = () => {
             onClick={prevProperty}
             onMouseEnter={() => setIsAutoPlaying(false)}
             onMouseLeave={() => setIsAutoPlaying(true)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-slate-700/90 hover:shadow-xl transition-all duration-300 border border-slate-600/50 hover:scale-110"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-slate-700/90 hover:shadow-xl transition-all duration-300 border border-slate-600/50 hover:scale-110"
           >
-            <ChevronLeft className="w-6 h-6 text-slate-300" />
+            <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
           </button>
 
           <button
             onClick={nextProperty}
             onMouseEnter={() => setIsAutoPlaying(false)}
             onMouseLeave={() => setIsAutoPlaying(true)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-slate-700/90 hover:shadow-xl transition-all duration-300 border border-slate-600/50 hover:scale-110"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-slate-700/90 hover:shadow-xl transition-all duration-300 border border-slate-600/50 hover:scale-110"
           >
-            <ChevronRight className="w-6 h-6 text-slate-300" />
+            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
           </button>
 
-          {/* Carousel container - 3 cartes visibles */}
-          <div className="relative h-[600px] overflow-hidden">
-            <div className="flex items-center justify-center h-full gap-8">
+          {/* Carousel container - responsive */}
+          <div className="relative h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] overflow-hidden">
+            <div className="flex items-center justify-center h-full gap-4 sm:gap-6 md:gap-8">
               {/* Carte précédente */}
               <motion.div
                 key={`prev-${currentIndex}`}
@@ -518,7 +518,7 @@ export const FeaturedPropertiesSection: React.FC = () => {
                   stiffness: 100,
                   damping: 15
                 }}
-                className="flex-shrink-0"
+                className="flex-shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] hidden sm:block"
               >
                 <PropertyCard
                   property={featuredProperties[(currentIndex - 1 + featuredProperties.length) % featuredProperties.length]}
@@ -547,7 +547,7 @@ export const FeaturedPropertiesSection: React.FC = () => {
                   stiffness: 120,
                   damping: 12
                 }}
-                className="flex-shrink-0 z-20"
+                className="flex-shrink-0 z-20 w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] lg:max-w-[450px]"
                 onMouseEnter={() => setIsHoveringCard(true)}
                 onMouseLeave={() => setIsHoveringCard(false)}
               >
@@ -578,7 +578,7 @@ export const FeaturedPropertiesSection: React.FC = () => {
                   stiffness: 100,
                   damping: 15
                 }}
-                className="flex-shrink-0"
+                className="flex-shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] hidden sm:block"
               >
                 <PropertyCard
                   property={featuredProperties[(currentIndex + 1) % featuredProperties.length]}
