@@ -9,10 +9,26 @@ import { createPortal } from 'react-dom';
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      
+      // Détecter la section active
+      const sections = ['hero', 'featured', 'services', 'about', 'illustration'];
+      const currentSection = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      
+      if (currentSection) {
+        setActiveSection(currentSection);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -20,10 +36,11 @@ export const Header: React.FC = () => {
   }, []);
 
   const navItems = [
-    { label: 'Accueil', href: '#home' },
+    { label: 'Accueil', href: '#hero' },
+    { label: 'Logement', href: '#featured' },
     { label: 'Services', href: '#services' },
     { label: 'À propos', href: '#about' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Contact', href: '#illustration' },
   ];
 
   return (
@@ -60,44 +77,50 @@ export const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
-              <motion.a
-                key={item.label}
-                href={item.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`font-medium transition-colors duration-200 relative group ${
-                  isScrolled 
-                    ? 'text-slate-700 hover:text-indigo-600' 
-                    : 'text-slate-200 hover:text-indigo-300'
-                }`}
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 group-hover:w-full transition-all duration-300" />
-              </motion.a>
-            ))}
+            {navItems.map((item, index) => {
+              const isActive = activeSection === item.href.substring(1);
+              return (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(item.href);
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`font-medium transition-all duration-300 relative group cursor-pointer px-3 py-2 rounded-lg ${
+                    isActive
+                      ? isScrolled 
+                        ? 'text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25' 
+                        : 'text-white bg-gradient-to-r from-indigo-400 to-purple-500 shadow-lg shadow-indigo-400/25'
+                      : isScrolled 
+                        ? 'text-slate-700 hover:text-white hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:shadow-lg hover:shadow-indigo-500/25' 
+                        : 'text-slate-200 hover:text-white hover:bg-gradient-to-r hover:from-indigo-400 hover:to-purple-500 hover:shadow-lg hover:shadow-indigo-400/25'
+                  }`}
+                >
+                  {item.label}
+                  {!isActive && (
+                    <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 group-hover:w-3/4 transition-all duration-300" />
+                  )}
+                  {/* Effet de brillance pour les liens actifs */}
+                  {isActive && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+                  )}
+                </motion.a>
+              );
+            })}
           </nav>
           <div className="hidden md:block ml-4">
             <BackendStatus />
           </div>
 
-          {/* Contact Info & CTA */}
-          <div className="hidden lg:flex items-center space-x-6">
-            <div className="flex items-center space-x-4 text-sm">
-              <div className={`flex items-center space-x-2 ${
-                isScrolled ? 'text-gray-600' : 'text-slate-300'
-              }`}>
-                <Phone className="w-4 h-4" />
-                <span>+224 627613835</span>
-              </div>
-              <div className={`flex items-center space-x-2 ${
-                isScrolled ? 'text-gray-600' : 'text-slate-300'
-              }`}>
-                <Mail className="w-4 h-4" />
-                <span>contact@itchoh.fr</span>
-              </div>
-            </div>
+          {/* CTA */}
+          <div className="hidden lg:flex items-center">
             <Link to="/proprietaire">
               <GradientButton size="sm">
                 Espace Propriétaire
@@ -161,39 +184,50 @@ export const Header: React.FC = () => {
                 </div>
 
                 <nav className="space-y-1">
-                  {navItems.map((item, i) => (
-                    <motion.a
-                      key={item.label}
-                      href={item.href}
-                      initial={{ x: 12, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.05 * i }}
-                      className="block rounded-lg px-3 py-2 text-slate-200 hover:bg-white/10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const target = document.querySelector(item.href);
-                        if (target) {
-                          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      {item.label}
-                    </motion.a>
-                  ))}
+                  {navItems.map((item, i) => {
+                    const isActive = activeSection === item.href.substring(1);
+                    return (
+                      <motion.a
+                        key={item.label}
+                        href={item.href}
+                        initial={{ x: 12, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.05 * i }}
+                        className={`block rounded-lg px-4 py-4 transition-all duration-300 cursor-pointer relative overflow-hidden ${
+                          isActive
+                            ? 'bg-gradient-to-r from-indigo-500/30 to-purple-600/30 text-white border-l-4 border-indigo-400 shadow-lg shadow-indigo-500/20'
+                            : 'text-slate-200 hover:bg-gradient-to-r hover:from-indigo-500/20 hover:to-purple-600/20 hover:text-white hover:shadow-lg hover:shadow-indigo-500/10'
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const target = document.querySelector(item.href);
+                          if (target) {
+                            // Petit délai pour fermer le menu avant le scroll
+                            setIsMobileMenuOpen(false);
+                            setTimeout(() => {
+                              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 100);
+                          }
+                        }}
+                      >
+                        <span className="flex items-center space-x-2 relative z-10">
+                          <span>{item.label}</span>
+                          <span className={`text-xs transition-all duration-300 ${
+                            isActive ? 'opacity-100 scale-110' : 'opacity-60 group-hover:scale-110'
+                          }`}>
+                            {isActive ? '●' : '→'}
+                          </span>
+                        </span>
+                        {/* Effet de brillance pour les liens actifs mobile */}
+                        {isActive && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+                        )}
+                      </motion.a>
+                    );
+                  })}
                 </nav>
 
                 <div className="mt-auto pt-6 border-t border-white/10">
-                  <div className="space-y-3 text-sm text-slate-300 mb-4">
-                    <div className="flex items-center space-x-2">
-                      <Phone className="w-4 h-4" />
-                      <span>+224 627613835</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Mail className="w-4 h-4" />
-                      <span>contact@itchoh.fr</span>
-                    </div>
-                  </div>
                   <Link to="/proprietaire" className="block">
                     <GradientButton size="sm" className="w-full">Espace Propriétaire</GradientButton>
                   </Link>

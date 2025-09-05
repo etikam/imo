@@ -13,12 +13,16 @@ import { AnimatedBackground } from '../components/ui/AnimatedBackground';
 export const HomePage: React.FC = () => {
   return (
     <>
-      <HeroSection />
-      <IllustrationSection />
+      <div id="hero">
+        <HeroSection />
+      </div>
+      <div id="illustration">
+        <IllustrationSection />
+      </div>
       <div className="relative" id="home">
         <AnimatedBackground />
         {/* Featured Properties - Overlay clair */}
-        <div className="relative z-10">
+        <div className="relative z-10" id="featured">
           <div className="absolute inset-0 bg-white/15 backdrop-blur-[2px]" />
           <FeaturedPropertiesSection />
         </div>
