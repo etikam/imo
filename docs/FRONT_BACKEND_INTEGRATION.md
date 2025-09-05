@@ -172,3 +172,4 @@ await api('/api/items/', { method: 'POST', body: JSON.stringify({...}) });
 - [ ] `GET /api/health` retourne `{"status":"ok"}`
 - [ ] Client `src/lib/api.ts` ajouté et réutilisé
 - [ ] (Prod) reverse-proxy ou `VITE_API_BASE` configuré
+

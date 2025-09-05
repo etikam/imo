@@ -1,5 +1,6 @@
 import React from 'react';
 import { HeroSection } from '../components/home/HeroSection';
+import { IllustrationSection } from '../components/home/IllustrationSection';
 import TrustIndicators from '../components/home/TrustIndicators';
 import ValuePropsSection from '../components/home/ValuePropsSection';
 import HowItWorksSection from '../components/home/HowItWorksSection';
@@ -11,6 +12,7 @@ export const HomePage: React.FC = () => {
   return (
     <>
       <HeroSection />
+      <IllustrationSection />
       <div className="bg-slate-950" id="home">
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12" id="about">
           <TrustIndicators />
