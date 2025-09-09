@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SectionOrnament } from '../components/ui/SectionOrnament';
 import { motion } from 'framer-motion';
 import { 
 	Building2, 
@@ -56,7 +57,8 @@ export const ContactPage: React.FC = () => {
 
 	if (isSubmitted) {
 		return (
-			<div className="bg-slate-950 min-h-screen flex items-center justify-center px-4 pt-24">
+			<div className="relative min-h-screen flex items-center justify-center px-4 pt-24">
+				<SectionOrnament variant="corners" />
 				<motion.div
 					initial={{ opacity: 0, scale: 0.9 }}
 					animate={{ opacity: 1, scale: 1 }}
@@ -82,7 +84,8 @@ export const ContactPage: React.FC = () => {
 	}
 
 	return (
-		<div className="bg-slate-950">
+		<div className="relative">
+			<SectionOrnament variant="corners" />
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
 				{/* Titre */}
 				<motion.div

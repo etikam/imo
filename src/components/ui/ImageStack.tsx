@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ImageStackProps {
   images: string[];
@@ -29,66 +29,72 @@ export const ImageStack: React.FC<ImageStackProps> = ({
   shadowIntensity = 'strong'
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(new Array(images.length).fill(false));
+  // Visibilité page / in-view pour contrôler l'autoplay
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [isInView, setIsInView] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Preload des images
   useEffect(() => {
-    const preloadImages = () => {
-      images.forEach((src, index) => {
-        const img = new Image();
-        img.onload = () => {
-          setImagesLoaded(prev => {
-            const newState = [...prev];
-            newState[index] = true;
-            return newState;
-          });
-        };
-        img.src = src;
-      });
-    };
+    const onVis = () => setIsPageVisible(!document.hidden);
+    onVis();
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
 
-    preloadImages();
-  }, [images]);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsInView(entry.isIntersecting);
+      },
+      { root: null, threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Rotation automatique
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    if (!isPageVisible || !isInView) return;
+    const intervalId = window.setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
     }, interval);
 
     return () => clearInterval(intervalId);
-  }, [images.length, interval]);
+  }, [images.length, interval, isPageVisible, isInView]);
 
   // Configuration des styles selon les props
   const getStackConfig = () => {
     switch (stackDepth) {
       case 'subtle':
         return {
-          scale: { active: 1, next: 0.96, prev: 0.92 },
-          opacity: { active: 1, next: 0.95, prev: 0.8 },
-          y: { active: 0, next: 8, prev: 16 },
-          x: { active: 0, next: 4, prev: 8 },
-          rotateY: { active: 0, next: 1, prev: 2 },
-          rotateX: { active: 0, next: 2, prev: 4 }
+          scale: { active: 1, next: 0.94, prev: 0.9 },
+          opacity: { active: 1, next: 0.92, prev: 0.78 },
+          y: { active: 0, next: 10, prev: 20 },
+          x: { active: 0, next: 6, prev: 12 },
+          rotateY: { active: 0, next: 2, prev: 4 },
+          rotateX: { active: 0, next: 3, prev: 6 }
         };
       case 'medium':
         return {
-          scale: { active: 1, next: 0.94, prev: 0.88 },
-          opacity: { active: 1, next: 0.9, prev: 0.75 },
-          y: { active: 0, next: 15, prev: 30 },
-          x: { active: 0, next: 8, prev: 16 },
-          rotateY: { active: 0, next: 2, prev: 4 },
-          rotateX: { active: 0, next: 3, prev: 6 }
+          scale: { active: 1, next: 0.9, prev: 0.82 },
+          opacity: { active: 1, next: 0.88, prev: 0.72 },
+          y: { active: 0, next: 22, prev: 44 },
+          x: { active: 0, next: 12, prev: 24 },
+          rotateY: { active: 0, next: 3, prev: 6 },
+          rotateX: { active: 0, next: 4, prev: 8 }
         };
       case 'pronounced':
       default:
         return {
-          scale: { active: 1, next: 0.92, prev: 0.85 },
-          opacity: { active: 1, next: 0.9, prev: 0.7 },
-          y: { active: 0, next: 20, prev: 40 },
-          x: { active: 0, next: 10, prev: 20 },
-          rotateY: { active: 0, next: 3, prev: 6 },
-          rotateX: { active: 0, next: 5, prev: 10 }
+          scale: { active: 1, next: 0.86, prev: 0.78 },
+          opacity: { active: 1, next: 0.88, prev: 0.68 },
+          y: { active: 0, next: 28, prev: 56 },
+          x: { active: 0, next: 16, prev: 32 },
+          rotateY: { active: 0, next: 4, prev: 8 },
+          rotateX: { active: 0, next: 6, prev: 12 }
         };
     }
   };
@@ -120,7 +126,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({
   const config = getStackConfig();
 
   return (
-    <div className={`relative ${height} ${width} ${className}`}>
+    <div ref={containerRef} className={`relative ${height} ${width} ${className}`}>
       <div className="relative w-full h-full" style={{ perspective: '1000px' }}>
         {/* Fond pour mieux voir l'empilement */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl border border-slate-700/30" />
@@ -152,14 +158,14 @@ export const ImageStack: React.FC<ImageStackProps> = ({
                 rotateX: isActive ? config.rotateX.active : isNext ? config.rotateX.next : config.rotateX.prev,
               }}
               transition={{
-                duration: 0.8,
-                ease: [0.25, 0.46, 0.45, 0.94],
-                scale: { duration: 0.8 },
-                opacity: { duration: 0.6 },
-                y: { duration: 0.8 },
-                x: { duration: 0.8 },
-                rotateY: { duration: 0.8 },
-                rotateX: { duration: 0.8 }
+                duration: 0.6,
+                ease: [0.22, 1, 0.36, 1],
+                scale: { duration: 0.6 },
+                opacity: { duration: 0.5 },
+                y: { duration: 0.6 },
+                x: { duration: 0.6 },
+                rotateY: { duration: 0.6 },
+                rotateX: { duration: 0.6 }
               }}
               style={{
                 transformStyle: "preserve-3d",
@@ -170,7 +176,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({
                 src={image}
                 alt={`Slide ${index + 1}`}
                 className="w-full h-full object-cover"
-                loading="eager"
+                loading={isActive ? 'eager' : 'lazy'}
                 decoding="async"
               />
               

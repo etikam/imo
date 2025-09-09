@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { SectionOrnament } from '../ui/SectionOrnament';
 import { ShieldCheck, CreditCard, Headphones, LineChart } from 'lucide-react';
 
 const ITEMS = [
@@ -32,6 +33,7 @@ const ITEMS = [
 export const ValuePropsSection: React.FC = () => {
 	return (
 		<section className="relative py-18" id="services">
+			<SectionOrnament variant="corners" />
 			{/* Soft background tint */}
 			<div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-white/0 via-white/2 to-white/0" />
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   MapPin, 
   Bed, 
@@ -13,6 +13,8 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+// Carousel refonte: scroll-snap basé Tailwind (sans plugin externe)
+import { SectionOrnament } from '../ui/SectionOrnament';
 
 // Données des propriétés à la une
 const featuredProperties = [
@@ -117,35 +119,25 @@ const featuredProperties = [
 // Composant de carte de propriété
 const PropertyCard: React.FC<{
   property: typeof featuredProperties[0];
-  index: number;
-  isActive: boolean;
   onClick: () => void;
-}> = ({ property, index, isActive, onClick }) => {
+}> = ({ property, onClick }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ 
-        opacity: 1, 
-        scale: isActive ? 1 : 0.9,
-        y: isActive ? 0 : 20
-      }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      style={{ willChange: 'transform' }}
       className={`
-        relative cursor-pointer group
-        ${isActive ? 'z-20' : 'z-10'}
+        relative cursor-pointer group z-10
       `}
       onClick={onClick}
     >
       <div className={`
         relative overflow-hidden rounded-2xl shadow-lg transition-all duration-500
-        ${isActive 
-          ? 'shadow-2xl ring-2 ring-indigo-500/50' 
-          : 'shadow-lg hover:shadow-xl'
-        }
+        shadow-lg hover:shadow-xl
       `}>
         {/* Image de la propriété */}
         <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
@@ -153,6 +145,8 @@ const PropertyCard: React.FC<{
             src={property.image}
             alt={property.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading={'lazy'}
+            decoding="async"
           />
           
           {/* Overlay gradient */}
@@ -256,36 +250,60 @@ const PropertyCard: React.FC<{
 export const FeaturedPropertiesSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isHoveringCard, setIsHoveringCard] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [isInView, setIsInView] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const len = featuredProperties.length;
+  // plus de pile 3D: états retirés
+  const indexRef = React.useRef<number>(0);
+  useEffect(() => { indexRef.current = currentIndex; }, [currentIndex]);
+  // helper pour une éventuelle navigation directe
+  // const goTo = (index: number) => {
+  //   const current = indexRef.current;
+  //   setExitDir(index > current ? 1 : -1);
+  //   setLastTop(featuredProperties[current]);
+  //   setCurrentIndex(index);
+  // };
 
-  // Auto-play avec pause sur hover
+  // Visibilité onglet
   useEffect(() => {
-    if (!isAutoPlaying || isHoveringCard) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % featuredProperties.length);
-    }, 3000);
+    const onVis = () => setIsPageVisible(!document.hidden);
+    onVis();
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
 
+  // In-view section
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver((entries) => {
+      setIsInView(entries[0]?.isIntersecting ?? true);
+    }, { threshold: 0.15 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-play conditionnel
+  useEffect(() => {
+    if (!isAutoPlaying || isHovering || !isPageVisible || !isInView) return;
+    const interval = window.setInterval(() => {
+      setCurrentIndex((idx) => (idx + 1) % len);
+    }, 3200);
     return () => clearInterval(interval);
-  }, [isAutoPlaying, isHoveringCard]);
+  }, [isAutoPlaying, isHovering, isPageVisible, isInView, len]);
 
-  const nextProperty = () => {
-    setCurrentIndex((prev) => (prev + 1) % featuredProperties.length);
-  };
-
-  const prevProperty = () => {
-    setCurrentIndex((prev) => (prev - 1 + featuredProperties.length) % featuredProperties.length);
-  };
+  const nextProperty = () => setCurrentIndex((idx) => (idx + 1) % len);
+  const prevProperty = () => setCurrentIndex((idx) => (idx - 1 + len) % len);
 
   return (
-    <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <section ref={sectionRef} className="py-20 relative overflow-hidden">
+      <SectionOrnament variant="corners" />
       {/* Background sophistiqué */}
-      <div className="absolute inset-0">
-        {/* Dégradé de base */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        
-        {/* Courbes élégantes */}
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none">
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Courbes élégantes (désactivées pour fond global uniforme) */}
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none" style={{ display: 'none' }}>
           <defs>
             <linearGradient id="featured-curve-glow" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
@@ -496,98 +514,45 @@ export const FeaturedPropertiesSection: React.FC = () => {
             <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 text-slate-300" />
           </button>
 
-          {/* Carousel container - responsive */}
-          <div className="relative h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] overflow-hidden">
-            <div className="flex items-center justify-center h-full gap-4 sm:gap-6 md:gap-8">
-              {/* Carte précédente */}
-              <motion.div
-                key={`prev-${currentIndex}`}
-                initial={{ opacity: 0, x: -80, scale: 0.8, rotateY: -15 }}
-                animate={{ 
-                  opacity: 0.7, 
-                  x: 0, 
-                  scale: 0.85, 
-                  rotateY: 0,
-                  filter: "blur(1px)"
-                }}
-                exit={{ opacity: 0, x: -80, scale: 0.8, rotateY: -15 }}
-                transition={{ 
-                  duration: 0.8, 
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15
-                }}
-                className="flex-shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] hidden sm:block"
-              >
-                <PropertyCard
-                  property={featuredProperties[(currentIndex - 1 + featuredProperties.length) % featuredProperties.length]}
-                  index={currentIndex - 1}
-                  isActive={false}
-                  onClick={() => setCurrentIndex((currentIndex - 1 + featuredProperties.length) % featuredProperties.length)}
-                />
-              </motion.div>
-
-              {/* Carte centrale (active) */}
-              <motion.div
-                key={`active-${currentIndex}`}
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: 1, 
-                  y: 0,
-                  filter: "blur(0px)",
-                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-                }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                transition={{ 
-                  duration: 0.8, 
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                  type: "spring",
-                  stiffness: 120,
-                  damping: 12
-                }}
-                className="flex-shrink-0 z-20 w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] lg:max-w-[450px]"
-                onMouseEnter={() => setIsHoveringCard(true)}
-                onMouseLeave={() => setIsHoveringCard(false)}
-              >
-                <PropertyCard
-                  property={featuredProperties[currentIndex]}
-                  index={currentIndex}
-                  isActive={true}
-                  onClick={() => {}}
-                />
-              </motion.div>
-
-              {/* Carte suivante */}
-              <motion.div
-                key={`next-${currentIndex}`}
-                initial={{ opacity: 0, x: 80, scale: 0.8, rotateY: 15 }}
-                animate={{ 
-                  opacity: 0.7, 
-                  x: 0, 
-                  scale: 0.85, 
-                  rotateY: 0,
-                  filter: "blur(1px)"
-                }}
-                exit={{ opacity: 0, x: 80, scale: 0.8, rotateY: 15 }}
-                transition={{ 
-                  duration: 0.8, 
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15
-                }}
-                className="flex-shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] hidden sm:block"
-              >
-                <PropertyCard
-                  property={featuredProperties[(currentIndex + 1) % featuredProperties.length]}
-                  index={currentIndex + 1}
-                  isActive={false}
-                  onClick={() => setCurrentIndex((currentIndex + 1) % featuredProperties.length)}
-                />
-              </motion.div>
-            </div>
+          {/* Carousel: 3 cartes visibles, centre mis en évidence */}
+          <div
+            className="relative h-[420px] sm:h-[480px] md:h-[540px] flex items-center justify-center"
+            onMouseEnter={() => { setIsAutoPlaying(false); setIsHovering(true); }}
+            onMouseLeave={() => { setIsAutoPlaying(true); setIsHovering(false); }}
+          >
+            {(() => {
+              const leftIdx = (currentIndex - 1 + len) % len;
+              const centerIdx = currentIndex;
+              const rightIdx = (currentIndex + 1) % len;
+              const slots = [leftIdx, centerIdx, rightIdx];
+              return (
+                <div className="flex items-stretch justify-center gap-4 sm:gap-6">
+                  {slots.map((idx, i) => {
+                    const isCenter = i === 1;
+                    return (
+                      <motion.div
+                        key={featuredProperties[idx].id}
+                        className="w-[260px] sm:w-[300px] md:w-[340px] lg:w-[380px]"
+                      >
+                        <motion.div
+                          animate={{ scale: isCenter ? 1 : 0.92, y: isCenter ? 0 : 6 }}
+                          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                          <PropertyCard
+                            property={featuredProperties[idx]}
+                            onClick={() => {
+                              if (i === 0) prevProperty();
+                              else if (i === 2) nextProperty();
+                              else nextProperty();
+                            }}
+                          />
+                        </motion.div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Indicateurs */}

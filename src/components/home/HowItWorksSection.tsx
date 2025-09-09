@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { SectionOrnament } from '../ui/SectionOrnament';
 import { Search, ClipboardCheck, Home, FileCheck2, Settings, Wallet } from 'lucide-react';
 
 const LOCATAIRE_STEPS = [
@@ -47,6 +48,7 @@ const Flow: React.FC<{ title: string; steps: { title: string; desc: string; Icon
 export const HowItWorksSection: React.FC = () => {
 	return (
 		<section className="relative py-16">
+			<SectionOrnament variant="rings" />
 			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 				<h2 className="text-center text-2xl md:text-3xl font-bold text-white mb-10">Comment ça marche</h2>
 				<div className="grid gap-10 md:grid-cols-2">

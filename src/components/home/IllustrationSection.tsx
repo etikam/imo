@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Search, Key, Shield, CheckCircle2 } from 'lucide-react';
+import { SectionOrnament } from '../ui/SectionOrnament';
 import { Link } from 'react-router-dom';
 
 export const IllustrationSection = () => {
   return (
-    <section className="py-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <section className="py-6 relative">
+      <SectionOrnament variant="rings" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Titre de section */}
         <motion.div

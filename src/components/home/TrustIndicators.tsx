@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { SectionOrnament } from '../ui/SectionOrnament';
 import { Building2, Shield, TrendingUp, Users } from 'lucide-react';
 
 interface StatItem {
@@ -18,6 +19,7 @@ const STATS: StatItem[] = [
 export const TrustIndicators: React.FC = () => {
 	return (
 		<div className="relative">
+			<SectionOrnament variant="rings" />
 			{/* Background avec effet de profondeur */}
 			<div className="absolute inset-0 bg-gradient-to-br from-slate-900/50 via-blue-900/30 to-slate-900/50 rounded-3xl blur-xl" />
 			<div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-blue-500/10 rounded-3xl" />

@@ -56,9 +56,9 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-gray-950 text-white relative overflow-hidden">
+    <footer className="text-white relative overflow-hidden bg-black/40">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10" />
       </div>
 

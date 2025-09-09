@@ -1,9 +1,11 @@
 import React from 'react';
+import { SectionOrnament } from '../ui/SectionOrnament';
 import { Link } from 'react-router-dom';
 
 export const CallToActionSection: React.FC = () => {
 	return (
-		<section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-18">
+		<section className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-18">
+			<SectionOrnament variant="corners" />
 			<div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-600 to-purple-600 p-8 md:p-12 shadow">
 				<div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
 				<div className="grid md:grid-cols-2 gap-6 items-center">
