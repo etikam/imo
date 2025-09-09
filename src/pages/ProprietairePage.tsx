@@ -26,6 +26,7 @@ import {
 	ChevronRight
 } from 'lucide-react';
 import { LocationCard } from '../components/proprietaire/LocationCard';
+import { SectionOrnament } from '../components/ui/SectionOrnament';
 import { BienCard } from '../components/proprietaire/BienCard';
 import { BienFilters } from '../components/proprietaire/BienFilters';
 import { SettingsModal } from '../components/proprietaire/SettingsModal';
@@ -303,9 +304,8 @@ export const ProprietairePage: React.FC = () => {
 	];
 
 	return (
-		<div className={`min-h-screen pt-20 transition-colors duration-300 ${
-			theme === 'dark' ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-50 via-white to-blue-50'
-		}`}>
+		<div className={`relative min-h-screen pt-20 transition-colors duration-300`}>
+			<SectionOrnament variant="rings" />
 			{/* Sidebar Mobile */}
 			<AnimatePresence>
 				{sidebarOpen && (
@@ -578,9 +578,7 @@ export const ProprietairePage: React.FC = () => {
 					</header>
 
 				{/* Content Area */}
-				<main className={`flex-1 p-4 lg:p-6 overflow-auto ${
-					theme === 'dark' ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-50 via-white to-blue-50'
-				}`}>
+				<main className={`flex-1 p-4 lg:p-6 overflow-auto`}>
 				{/* Content */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}

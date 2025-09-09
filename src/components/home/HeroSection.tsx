@@ -1,8 +1,7 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Building2, Home } from 'lucide-react';
-import { FloatingElement } from '../ui/FloatingElement';
 import { ImageStack } from '../ui/ImageStack';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 // Importation des images pour garantir qu'elles sont bien chargées par Vite
@@ -11,6 +10,7 @@ import image2 from '../../assets/images/image2.jpg';
 import image3 from '../../assets/images/image3.jpg';
 
 export const HeroSection = () => {
+  const prefersReducedMotion = useReducedMotion();
   const floatingIcons = [
     { Icon: Building2, delay: 0, position: 'top-20 left-20' },
     { Icon: Home, delay: 0.5, position: 'bottom-20 right-20' },
@@ -21,23 +21,38 @@ export const HeroSection = () => {
   // Phrase d'accroche unique
   const mainSentence = 'La plateforme immobilière qui simplifie tout';
 
+  // Positions/paramètres stables pour éviter Math.random() à chaque rendu
+  const starConfig = useMemo(() => {
+    if (prefersReducedMotion) {
+      return { far: [], medium: [], close: [], bright: [], giant: [], particles: [], lines: [] } as const;
+    }
+    const random = (min: number, max: number) => Math.random() * (max - min) + min;
+    const mkPoints = (count: number) => Array.from({ length: count }, () => ({ left: `${random(5, 95)}%`, top: `${random(5, 95)}%` }));
+    const far = mkPoints(10);
+    const medium = mkPoints(6);
+    const close = mkPoints(3);
+    const bright = mkPoints(2);
+    const giant: { left: string; top: string; }[] = [];
+    const particles = Array.from({ length: 2 }, () => ({ left: `${random(15, 85)}%`, top: `${random(15, 85)}%` }));
+    const lines = Array.from({ length: 1 }, () => ({ top: `${random(10, 90)}%` }));
+    return { far, medium, close, bright, giant, particles, lines } as const;
+  }, [prefersReducedMotion]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Background sophistiqué - vide spatial */}
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-950/60">
+      {/* Légère teinte locale pour Hero */}
       <div className="absolute inset-0">
-        {/* Vide spatial sombre avec étoiles */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950" />
         
         {/* Étoiles avec profondeur */}
         <div className="absolute inset-0">
           {/* Étoiles lointaines (petites) */}
-          {Array.from({ length: 60 }).map((_, i) => (
+          {starConfig.far.map((pos, i) => (
             <motion.div
               key={`far-${i}`}
               className="absolute w-0.5 h-0.5 bg-orange-300 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
                 zIndex: 1,
               }}
               animate={{
@@ -45,21 +60,21 @@ export const HeroSection = () => {
                 scale: [0.3, 0.8, 0.3],
               }}
               transition={{
-                duration: 3 + Math.random() * 4,
+                duration: 4.5,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: i * 0.05,
               }}
             />
           ))}
           
           {/* Étoiles moyennes */}
-          {Array.from({ length: 30 }).map((_, i) => (
+          {starConfig.medium.map((pos, i) => (
             <motion.div
               key={`medium-${i}`}
               className="absolute w-1 h-1 bg-orange-400 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
                 zIndex: 2,
               }}
               animate={{
@@ -67,21 +82,21 @@ export const HeroSection = () => {
                 scale: [0.6, 1.2, 0.6],
               }}
               transition={{
-                duration: 2.5 + Math.random() * 2,
+                duration: 3.2,
                 repeat: Infinity,
-                delay: Math.random() * 2.5,
+                delay: i * 0.07,
               }}
             />
           ))}
           
           {/* Étoiles proches */}
-          {Array.from({ length: 15 }).map((_, i) => (
+          {starConfig.close.map((pos, i) => (
             <motion.div
               key={`close-${i}`}
               className="absolute w-1.5 h-1.5 bg-orange-500 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
                 zIndex: 3,
               }}
               animate={{
@@ -89,21 +104,21 @@ export const HeroSection = () => {
                 scale: [0.8, 1.4, 0.8],
               }}
               transition={{
-                duration: 2 + Math.random() * 1.5,
+                duration: 2.8,
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: i * 0.09,
               }}
             />
           ))}
           
           {/* Étoiles brillantes (premier plan) */}
-          {Array.from({ length: 8 }).map((_, i) => (
+          {starConfig.bright.map((pos, i) => (
             <motion.div
               key={`bright-${i}`}
               className="absolute w-2 h-2 bg-orange-300 rounded-full shadow-lg"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
                 zIndex: 4,
                 boxShadow: '0 0 10px rgba(251, 146, 60, 0.8)',
               }}
@@ -112,21 +127,21 @@ export const HeroSection = () => {
                 scale: [0.9, 1.6, 0.9],
               }}
               transition={{
-                duration: 1.5 + Math.random() * 1,
+                duration: 2.4,
                 repeat: Infinity,
-                delay: Math.random() * 1.5,
+                delay: i * 0.12,
               }}
             />
           ))}
           
           {/* Étoiles géantes (très proches) */}
-          {Array.from({ length: 3 }).map((_, i) => (
+          {starConfig.giant.map((pos, i) => (
             <motion.div
               key={`giant-${i}`}
               className="absolute w-3 h-3 bg-orange-200 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
                 zIndex: 5,
                 boxShadow: '0 0 20px rgba(251, 146, 60, 1)',
               }}
@@ -135,9 +150,9 @@ export const HeroSection = () => {
                 scale: [1, 1.8, 1],
               }}
               transition={{
-                duration: 1 + Math.random() * 0.5,
+                duration: 2.2,
                 repeat: Infinity,
-                delay: Math.random() * 1,
+                delay: i * 0.15,
               }}
             />
           ))}
@@ -237,25 +252,6 @@ export const HeroSection = () => {
             }}
           />
           
-          <motion.path
-            d="M 80 0 Q 85 30, 80 60 T 80 100"
-            stroke="url(#curve-glow)"
-            strokeWidth="0.6"
-            fill="none"
-            filter="url(#curve-glow-effect)"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ 
-              pathLength: [0, 1, 0],
-              opacity: [0, 0.4, 0]
-            }}
-            transition={{
-              duration: 11,
-              delay: 1.5,
-              repeat: Infinity,
-              repeatDelay: 3.5
-            }}
-          />
-          
           {/* Courbes diagonales fluides */}
           <motion.path
             d="M 0 0 Q 50 25, 100 0"
@@ -297,7 +293,7 @@ export const HeroSection = () => {
         </svg>
 
         {/* Effets de distorsion subtils - harmonie avec les lignes orange */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0" style={{ display: 'none' }}>
           {/* Zone de distorsion principale */}
           <motion.div
             className="absolute top-1/3 left-1/3 w-[300px] h-[300px] rounded-full"
@@ -311,7 +307,7 @@ export const HeroSection = () => {
               opacity: [0.2, 0.4, 0.2]
             }}
             transition={{
-              duration: 25,
+              duration: 35,
               repeat: Infinity,
               ease: "linear"
             }}
@@ -330,7 +326,7 @@ export const HeroSection = () => {
               opacity: [0.15, 0.3, 0.15]
             }}
             transition={{
-              duration: 30,
+              duration: 40,
               repeat: Infinity,
               ease: "linear"
             }}
@@ -339,27 +335,27 @@ export const HeroSection = () => {
 
         {/* Particules orange flottantes */}
         <div className="absolute inset-0">
-          {Array.from({ length: 12 }, (_, i) => (
+          {starConfig.particles.map((pos, i) => (
             <motion.div
               key={i}
               className="absolute w-1.5 h-1.5 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
                 background: `radial-gradient(circle, #f97316 0%, #ea580c 50%, transparent 100%)`,
                 boxShadow: `0 0 8px #f97316`
               }}
               animate={{
                 y: [0, -40, 0],
-                x: [0, Math.random() * 20 - 10, 0],
+                x: [0, (i % 2 === 0 ? 10 : -10), 0],
                 opacity: [0, 0.8, 0],
                 scale: [0, 1.2, 0],
               }}
               transition={{
-                duration: 6 + Math.random() * 4,
-                delay: Math.random() * 2,
+                duration: 7,
+                delay: i * 0.25,
                 repeat: Infinity,
-                repeatDelay: Math.random() * 3,
+                repeatDelay: 2,
             }}
           />
         ))}
@@ -367,12 +363,12 @@ export const HeroSection = () => {
 
         {/* Lignes d'énergie orange qui traversent l'écran */}
         <div className="absolute inset-0">
-          {Array.from({ length: 6 }, (_, i) => (
+          {starConfig.lines.map((line, i) => (
         <motion.div
               key={i}
               className="absolute h-px w-full"
               style={{
-                top: `${Math.random() * 100}%`,
+                top: line.top,
                 background: `linear-gradient(90deg, transparent, ${
                   ['#f97316', '#ea580c', '#dc2626'][Math.floor(Math.random() * 3)]
                 }, transparent)`,
@@ -383,10 +379,10 @@ export const HeroSection = () => {
                 scaleX: [0, 1, 0],
               }}
               transition={{
-                duration: 4,
-                delay: i * 0.7,
+                duration: 6,
+                delay: i * 1,
                 repeat: Infinity,
-                repeatDelay: 3 + Math.random() * 2,
+                repeatDelay: 4,
               }}
             />
           ))}
@@ -398,20 +394,7 @@ export const HeroSection = () => {
 
       {/* Hero Content */}
       <section className="relative z-10 px-4 pt-24 lg:px-6 w-full">
-        {/* Floating Icons */}
-        {floatingIcons.map(({ Icon, delay, position }, index) => (
-          <FloatingElement
-            key={index}
-            delay={delay}
-            duration={4 + index * 0.5}
-            amplitude={15 + index * 5}
-            className={`absolute ${position} hidden lg:block`}
-          >
-            <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg flex items-center justify-center border border-white/20">
-              <Icon className="w-8 h-8 text-blue-400" />
-            </div>
-          </FloatingElement>
-        ))}
+        {/* Floating icons removed for cleaner, static hero */}
 
         {/* Main Content - Layout gauche/droite */}
         <motion.div

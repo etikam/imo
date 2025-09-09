@@ -12,27 +12,39 @@ export const Header: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      // Détecter la section active
-      const sections = ['hero', 'featured', 'services', 'about', 'illustration'];
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      
-      if (currentSection) {
-        setActiveSection(currentSection);
-      }
-    };
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Observer pour détecter la section active sans calcul à chaque scroll
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const ids = ['hero', 'featured', 'services', 'about', 'illustration'];
+    const entriesMap = new Map<string, number>();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.id;
+        entriesMap.set(id, entry.intersectionRatio);
+      });
+      let bestId = 'hero';
+      let bestRatio = 0;
+      entriesMap.forEach((ratio, id) => {
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestId = id;
+        }
+      });
+      setActiveSection(bestId);
+    }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   const navItems = [

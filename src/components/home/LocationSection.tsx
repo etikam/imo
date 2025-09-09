@@ -1,10 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { SectionOrnament } from '../ui/SectionOrnament';
 import { MapPin, Phone, Mail, Building2 } from 'lucide-react';
 
 export const LocationSection: React.FC = () => {
 	return (
 		<section className="relative py-16" id="location">
+			<SectionOrnament variant="rings" />
 			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="mb-8 flex items-center gap-3">
 					<div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center">

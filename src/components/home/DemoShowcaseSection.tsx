@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { SectionOrnament } from '../ui/SectionOrnament';
 
 // Démo: utilisez des images réelles dans src/assets/images ou public
 import demo1 from '../../assets/images/image1.jpg';
@@ -44,6 +45,7 @@ export const DemoShowcaseSection: React.FC = () => {
 
 	return (
 		<section className="relative py-16 overflow-x-hidden">
+			<SectionOrnament variant="corners" />
 			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-end justify-between mb-6">
 					<h2 className="text-2xl md:text-3xl font-bold text-white">Aperçu de la plateforme</h2>
