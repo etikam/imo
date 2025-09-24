@@ -7,7 +7,8 @@ from rest_framework.decorators import api_view, permission_classes, parser_class
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import JSONParser, FormParser
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
+from ..parsers import PlainTextParser
 from ..serializers.auth import LoginSerializer, UserSerializer
 import json
 
@@ -21,15 +22,22 @@ def csrf_token_view(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-@parser_classes([JSONParser, FormParser])
+@parser_classes([JSONParser, FormParser, MultiPartParser, PlainTextParser])
 def login_view(request):
-    # Fallback: certains clients envoient text/plain → parser manuellement JSON
+    # Normalise payload: DRF parsers fill request.data.
+    # - JSON/Form/MultiPart donnent déjà un dict
+    # - PlainTextParser renvoie bytes/str → tenter JSON.parse sans relire request.body
     payload = request.data
-    if (not payload or isinstance(payload, (str, bytes))) and request.body:
+    if isinstance(payload, (bytes, str)):
         try:
-            payload = json.loads(request.body.decode('utf-8'))
+            if isinstance(payload, bytes):
+                payload = json.loads(payload.decode('utf-8'))
+            else:
+                payload = json.loads(payload)
         except Exception:
             payload = {}
+    elif not isinstance(payload, dict) or payload is None:
+        payload = {}
 
     serializer = LoginSerializer(data=payload, context={'request': request})
     serializer.is_valid(raise_exception=True)

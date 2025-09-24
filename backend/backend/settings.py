@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'users.middleware.SingleDeviceSessionMiddleware',
     'users.middleware.SessionSecurityMiddleware',
+    'users.middleware.RoleRouteGuardMiddleware',
     'users.middleware.UserActivityMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

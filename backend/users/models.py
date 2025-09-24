@@ -121,3 +121,25 @@ class BaseUser(AbstractUser):
         """Active le compte utilisateur"""
         self.is_active = True
         self.save(update_fields=['is_active'])
+
+
+# Proxy models pour distinguer les types d'utilisateurs dans l'admin
+class ProprietaireUser(BaseUser):
+    class Meta:
+        proxy = True
+        verbose_name = "Propriétaire"
+        verbose_name_plural = "Propriétaires"
+
+
+class LocataireUser(BaseUser):
+    class Meta:
+        proxy = True
+        verbose_name = "Locataire"
+        verbose_name_plural = "Locataires"
+
+
+class ManagerUser(BaseUser):
+    class Meta:
+        proxy = True
+        verbose_name = "Gestionnaire"
+        verbose_name_plural = "Gestionnaires"

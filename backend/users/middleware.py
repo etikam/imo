@@ -150,6 +150,43 @@ class UserActivityMiddleware:
         # Traitement après la vue
         return response
     
+
+class RoleRouteGuardMiddleware:
+    """
+    Enforce user_type based on API URL prefixes so backend is the source of truth.
+    - /api/proprietaire/... → requires user_type == 'proprietaire'
+    - /api/gestionnaire/... → requires user_type == 'manager'
+    - /api/locataire/...    → requires user_type == 'locataire'
+    Auth routes and non-API routes are ignored.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        path = request.path or ''
+
+        # Only guard API routes outside auth endpoints
+        if path.startswith('/api/') and not path.startswith('/api/v1/auth/'):
+            required = None
+            if path.startswith('/api/proprietaire/'):
+                required = 'proprietaire'
+            elif path.startswith('/api/gestionnaire/'):
+                required = 'manager'
+            elif path.startswith('/api/locataire/'):
+                required = 'locataire'
+
+            if required:
+                user = getattr(request, 'user', None)
+                if not user or not user.is_authenticated:
+                    from django.http import JsonResponse
+                    return JsonResponse({'error': 'Authentication required'}, status=401)
+                if getattr(user, 'user_type', None) != required:
+                    from django.http import JsonResponse
+                    return JsonResponse({'error': f'User type required: {required}'}, status=403)
+
+        return self.get_response(request)
+
     def _track_user_activity(self, request):
         """
         Track l'activité de l'utilisateur

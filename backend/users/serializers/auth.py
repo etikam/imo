@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True, max_length=150)
+    username = serializers.CharField(required=True, max_length=50)
     password = serializers.CharField(write_only=True, required=True, trim_whitespace=False)
 
     def validate(self, attrs):
