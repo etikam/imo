@@ -15,7 +15,7 @@ export const CallToActionSection: React.FC = () => {
 					</div>
 					<div className="flex flex-col sm:flex-row items-center md:justify-end gap-3">
 						<Link to="/contact" className="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-indigo-700 shadow hover:shadow-md transition">Commencer maintenant</Link>
-						<a href="#demo" className="inline-flex items-center justify-center rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white/95 hover:bg-white/10 transition">Demander une démo</a>
+						<Link to={{ pathname: '/', hash: '#demo' }} className="inline-flex items-center justify-center rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white/95 hover:bg-white/10 transition">Demander une démo</Link>
 					</div>
 				</div>
 			</div>

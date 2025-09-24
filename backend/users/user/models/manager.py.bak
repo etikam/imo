@@ -1,0 +1,233 @@
+"""
+Modèle pour les gestionnaires/managers
+"""
+from django.db import models
+from django.core.validators import RegexValidator
+from .base import BaseUser
+
+
+class Manager(BaseUser):
+    """
+    Modèle pour les gestionnaires avec différents niveaux d'accès
+    """
+    
+    # Niveaux d'accès des managers
+    ACCESS_LEVEL_CHOICES = [
+        ('agent', 'Agent'),
+        ('manager', 'Manager'),
+        ('admin', 'Administrateur'),
+    ]
+    
+    access_level = models.CharField(
+        max_length=20,
+        choices=ACCESS_LEVEL_CHOICES,
+        default='agent',
+        help_text="Niveau d'accès du gestionnaire"
+    )
+    
+    # Informations professionnelles
+    employee_id = models.CharField(
+        max_length=50,
+        unique=True,
+        help_text="Identifiant employé"
+    )
+    
+    department = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Département"
+    )
+    
+    position = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Poste occupé"
+    )
+    
+    # Informations de contact professionnel
+    work_phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message="Le numéro de téléphone doit être au format: '+999999999'. Jusqu'à 15 chiffres autorisés."
+    )
+    work_phone = models.CharField(
+        validators=[work_phone_regex],
+        max_length=17,
+        blank=True,
+        help_text="Téléphone professionnel"
+    )
+    
+    work_email = models.EmailField(
+        blank=True,
+        help_text="Email professionnel"
+    )
+    
+    # Gestion des permissions
+    can_create_users = models.BooleanField(
+        default=False,
+        help_text="Peut créer des utilisateurs"
+    )
+    can_manage_managers = models.BooleanField(
+        default=False,
+        help_text="Peut gérer d'autres managers"
+    )
+    can_access_analytics = models.BooleanField(
+        default=False,
+        help_text="Peut accéder aux analytics"
+    )
+    can_manage_properties = models.BooleanField(
+        default=True,
+        help_text="Peut gérer les propriétés"
+    )
+    can_manage_contracts = models.BooleanField(
+        default=False,
+        help_text="Peut gérer les contrats"
+    )
+    can_access_financial_data = models.BooleanField(
+        default=False,
+        help_text="Peut accéder aux données financières"
+    )
+    
+    # Limites et restrictions
+    max_properties_managed = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Nombre maximum de propriétés à gérer (null = illimité)"
+    )
+    
+    # Supervision
+    supervisor = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='subordinates',
+        help_text="Superviseur direct"
+    )
+    
+    # Statut et dates
+    hire_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Date d'embauche"
+    )
+    
+    is_active_employee = models.BooleanField(
+        default=True,
+        help_text="Employé actif"
+    )
+    
+    # Préférences
+    dashboard_layout = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Configuration du dashboard"
+    )
+    
+    notification_preferences = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Préférences de notifications"
+    )
+    
+    class Meta:
+        verbose_name = "Gestionnaire"
+        verbose_name_plural = "Gestionnaires"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.get_full_name()} ({self.get_access_level_display()})"
+    
+    def get_display_name(self):
+        """Retourne le nom d'affichage avec le niveau d'accès"""
+        return f"{self.get_full_name()} - {self.get_access_level_display()}"
+    
+    def is_admin(self):
+        """Vérifie si le manager est administrateur"""
+        return self.access_level == 'admin'
+    
+    def is_manager(self):
+        """Vérifie si le manager a le niveau manager ou admin"""
+        return self.access_level in ['manager', 'admin']
+    
+    def is_agent(self):
+        """Vérifie si le manager est un agent"""
+        return self.access_level == 'agent'
+    
+    def can_manage_user_type(self, user_type):
+        """Vérifie si le manager peut gérer un type d'utilisateur spécifique"""
+        if not self.can_create_users:
+            return False
+        
+        # Les admins peuvent tout gérer
+        if self.is_admin():
+            return True
+        
+        # Les managers peuvent gérer les propriétaires et locataires
+        if self.is_manager() and user_type in ['proprietaire', 'locataire']:
+            return True
+        
+        # Les agents ne peuvent pas créer d'utilisateurs
+        return False
+    
+    def can_manage_other_managers(self):
+        """Vérifie si le manager peut gérer d'autres managers"""
+        return self.can_manage_managers and self.is_manager()
+    
+    def get_subordinates(self):
+        """Retourne tous les subordonnés directs et indirects"""
+        subordinates = []
+        for subordinate in self.subordinates.all():
+            subordinates.append(subordinate)
+            subordinates.extend(subordinate.get_subordinates())
+        return subordinates
+    
+    def get_effective_permissions(self):
+        """Retourne les permissions effectives du manager"""
+        permissions = {
+            'can_create_users': self.can_create_users,
+            'can_manage_managers': self.can_manage_managers,
+            'can_access_analytics': self.can_access_analytics,
+            'can_manage_properties': self.can_manage_properties,
+            'can_manage_contracts': self.can_manage_contracts,
+            'can_access_financial_data': self.can_access_financial_data,
+        }
+        
+        # Les admins ont toutes les permissions
+        if self.is_admin():
+            permissions = {key: True for key in permissions.keys()}
+        
+        return permissions
+    
+    def set_permissions_by_level(self):
+        """Définit les permissions selon le niveau d'accès"""
+        if self.access_level == 'agent':
+            self.can_create_users = False
+            self.can_manage_managers = False
+            self.can_access_analytics = False
+            self.can_manage_properties = True
+            self.can_manage_contracts = False
+            self.can_access_financial_data = False
+        elif self.access_level == 'manager':
+            self.can_create_users = True
+            self.can_manage_managers = False
+            self.can_access_analytics = True
+            self.can_manage_properties = True
+            self.can_manage_contracts = True
+            self.can_access_financial_data = False
+        elif self.access_level == 'admin':
+            self.can_create_users = True
+            self.can_manage_managers = True
+            self.can_access_analytics = True
+            self.can_manage_properties = True
+            self.can_manage_contracts = True
+            self.can_access_financial_data = True
+    
+    def save(self, *args, **kwargs):
+        """Override save pour définir automatiquement le user_type et les permissions"""
+        self.user_type = 'manager'
+        
+        # Définir les permissions selon le niveau si c'est un nouveau manager
+        if not self.pk:
+            self.set_permissions_by_level()
+        
+        super().save(*args, **kwargs)
