@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Building2, Phone, Mail } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Menu, X, Building2 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import BackendStatus from '../home/BackendStatus';
+import { useTheme } from '../../contexts/ThemeContext';
 import { GradientButton } from '../ui/GradientButton';
 import { createPortal } from 'react-dom';
 
 export const Header: React.FC = () => {
+  const { currentUser, authLoading, logout } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -18,7 +21,7 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Observer pour détecter la section active sans calcul à chaque scroll
+  // Observer pour détecter la section active et se réinitialiser lors des changements de route
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return;
     const ids = ['hero', 'featured', 'services', 'about', 'illustration'];
@@ -26,7 +29,7 @@ export const Header: React.FC = () => {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        const id = entry.target.id;
+        const id = (entry.target as HTMLElement).id;
         entriesMap.set(id, entry.intersectionRatio);
       });
       let bestId = 'hero';
@@ -44,8 +47,24 @@ export const Header: React.FC = () => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+
+    // Si un hash est présent et connu, le définir immédiatement comme actif
+    const hashId = location.hash?.replace('#', '');
+    if (hashId && ids.includes(hashId)) {
+      setActiveSection(hashId);
+    }
+
     return () => observer.disconnect();
-  }, []);
+  }, [location.pathname]);
+
+  // Mettre à jour l'état actif lors d'un changement de hash (utile si le menu reste ouvert)
+  useEffect(() => {
+    const hashId = location.hash?.replace('#', '');
+    const ids = ['hero', 'featured', 'services', 'about', 'illustration'];
+    if (hashId && ids.includes(hashId)) {
+      setActiveSection(hashId);
+    }
+  }, [location.hash]);
 
   const navItems = [
     { label: 'Accueil', href: '#hero' },
@@ -70,39 +89,44 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 min-w-0">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-3 flex-shrink-0"
-          >
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <Building2 className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-                ITCHOH
-              </h1>
-              <p className={`text-xs font-medium ${
-                isScrolled ? 'text-slate-500' : 'text-slate-300'
-              }`}>GROUP</p>
-            </div>
-          </motion.div>
+          <Link to="/">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-3 flex-shrink-0"
+            >
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <Building2 className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+                  ITCHOH
+                </h1>
+                <p className={`text-xs font-medium ${
+                  isScrolled ? 'text-slate-500' : 'text-slate-300'
+                }`}>GROUP</p>
+              </div>
+            </motion.div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => {
               const isActive = activeSection === item.href.substring(1);
+              const hash = item.href; // e.g. '#services'
               return (
-                <motion.a
+                <Link
                   key={item.label}
-                  href={item.href}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  to={{ pathname: '/', hash }}
                   onClick={(e) => {
-                    e.preventDefault();
-                    const target = document.querySelector(item.href);
-                    if (target) {
-                      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // If already on home, keep smooth-scroll behavior
+                    if (typeof window !== 'undefined' && window.location.pathname === '/') {
+                      e.preventDefault();
+                      const target = document.querySelector(hash);
+                      if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // update hash without jump
+                        history.replaceState(null, '', `/${hash}`);
+                      }
                     }
                   }}
                   className={`font-medium transition-all duration-300 relative group cursor-pointer px-3 py-2 rounded-lg ${
@@ -115,15 +139,20 @@ export const Header: React.FC = () => {
                         : 'text-slate-200 hover:text-white hover:bg-gradient-to-r hover:from-indigo-400 hover:to-purple-500 hover:shadow-lg hover:shadow-indigo-400/25'
                   }`}
                 >
-                  {item.label}
+                  <motion.span
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {item.label}
+                  </motion.span>
                   {!isActive && (
                     <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 group-hover:w-3/4 transition-all duration-300" />
                   )}
-                  {/* Effet de brillance pour les liens actifs */}
                   {isActive && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                   )}
-                </motion.a>
+                </Link>
               );
             })}
           </nav>
@@ -133,11 +162,31 @@ export const Header: React.FC = () => {
 
           {/* CTA */}
           <div className="hidden lg:flex items-center">
-            <Link to="/proprietaire">
-              <GradientButton size="sm">
-                Espace Propriétaire
-              </GradientButton>
-            </Link>
+            {!authLoading && !currentUser && (
+              <Link to="/login">
+                <GradientButton size="sm">Se connecter</GradientButton>
+              </Link>
+            )}
+            {!authLoading && currentUser?.user_type === 'proprietaire' && (
+              <Link to="/proprietaire">
+                <GradientButton size="sm">Mon espace</GradientButton>
+              </Link>
+            )}
+            {!authLoading && currentUser?.user_type === 'manager' && (
+              <Link to="/gestionnaire" className="ml-3">
+                <GradientButton size="sm">Dashboard</GradientButton>
+              </Link>
+            )}
+            {!authLoading && currentUser?.user_type === 'locataire' && (
+              <Link to="/locataire" className="ml-3">
+                <GradientButton size="sm">Mon espace</GradientButton>
+              </Link>
+            )}
+            {!authLoading && currentUser && (
+              <button onClick={logout} className="ml-3">
+                <GradientButton size="sm">Se déconnecter</GradientButton>
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -198,51 +247,77 @@ export const Header: React.FC = () => {
                 <nav className="space-y-1">
                   {navItems.map((item, i) => {
                     const isActive = activeSection === item.href.substring(1);
+                    const hash = item.href;
                     return (
-                      <motion.a
+                      <Link
                         key={item.label}
-                        href={item.href}
-                        initial={{ x: 12, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.05 * i }}
+                        to={{ pathname: '/', hash }}
                         className={`block rounded-lg px-4 py-4 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                           isActive
                             ? 'bg-gradient-to-r from-indigo-500/30 to-purple-600/30 text-white border-l-4 border-indigo-400 shadow-lg shadow-indigo-500/20'
                             : 'text-slate-200 hover:bg-gradient-to-r hover:from-indigo-500/20 hover:to-purple-600/20 hover:text-white hover:shadow-lg hover:shadow-indigo-500/10'
                         }`}
                         onClick={(e) => {
-                          e.preventDefault();
-                          const target = document.querySelector(item.href);
-                          if (target) {
-                            // Petit délai pour fermer le menu avant le scroll
+                          if (typeof window !== 'undefined' && window.location.pathname === '/') {
+                            e.preventDefault();
                             setIsMobileMenuOpen(false);
                             setTimeout(() => {
-                              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              const target = document.querySelector(hash);
+                              if (target) {
+                                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                history.replaceState(null, '', `/${hash}`);
+                              }
                             }, 100);
                           }
                         }}
                       >
-                        <span className="flex items-center space-x-2 relative z-10">
+                        <motion.span
+                          initial={{ x: 12, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ delay: 0.05 * i }}
+                          className="flex items-center space-x-2 relative z-10"
+                        >
                           <span>{item.label}</span>
                           <span className={`text-xs transition-all duration-300 ${
                             isActive ? 'opacity-100 scale-110' : 'opacity-60 group-hover:scale-110'
                           }`}>
                             {isActive ? '●' : '→'}
                           </span>
-                        </span>
-                        {/* Effet de brillance pour les liens actifs mobile */}
+                        </motion.span>
                         {isActive && (
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                         )}
-                      </motion.a>
+                      </Link>
                     );
                   })}
                 </nav>
 
-                <div className="mt-auto pt-6 border-t border-white/10">
-                  <Link to="/proprietaire" className="block">
-                    <GradientButton size="sm" className="w-full">Espace Propriétaire</GradientButton>
-                  </Link>
+                <div className="mt-auto pt-6 border-t border-white/10 space-y-3">
+                  {!authLoading && !currentUser && (
+                    <Link to="/login" className="block">
+                      <GradientButton size="sm" className="w-full">Se connecter</GradientButton>
+                    </Link>
+                  )}
+                  {!authLoading && currentUser?.user_type === 'proprietaire' && (
+                    <Link to="/proprietaire" className="block">
+                      <GradientButton size="sm" className="w-full">Mon espace</GradientButton>
+                    </Link>
+                  )}
+                  {!authLoading && currentUser?.user_type === 'manager' && (
+                    <Link to="/gestionnaire" className="block">
+                      <GradientButton size="sm" className="w-full">Dashboard</GradientButton>
+                    </Link>
+                  )}
+                  {!authLoading && currentUser?.user_type === 'locataire' && (
+                    <Link to="/locataire" className="block">
+                      <GradientButton size="sm" className="w-full">Mon espace</GradientButton>
+                    </Link>
+                  )}
+                  {!authLoading && currentUser && (
+                    <button onClick={logout} className="block w-full">
+                      <GradientButton size="sm" className="w-full">Se déconnecter</GradientButton>
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.aside>

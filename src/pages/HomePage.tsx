@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
+import { WelcomePopup } from '../components/ui/WelcomePopup';
 import { HeroSection } from '../components/home/HeroSection';
 import { IllustrationSection } from '../components/home/IllustrationSection';
 import { FeaturedPropertiesSection } from '../components/home/FeaturedPropertiesSection';
@@ -12,6 +15,31 @@ import LocationSection from '../components/home/LocationSection';
 import { SectionDivider } from '../components/ui/SectionDivider';
 
 export const HomePage: React.FC = () => {
+  const location = useLocation();
+  const { currentUser } = useTheme();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const scrollToHash = () => {
+      if (!location.hash) return;
+      const el = document.querySelector(location.hash);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    // Ensure sections are mounted
+    const id = window.setTimeout(scrollToHash, 0);
+    return () => window.clearTimeout(id);
+  }, [location.hash]);
+
+  useEffect(() => {
+    // Affiche le popup à la première arrivée sur Home après login
+    if (currentUser && sessionStorage.getItem('welcomed') !== '1') {
+      setShowWelcome(true);
+      sessionStorage.setItem('welcomed', '1');
+    }
+  }, [currentUser]);
+
   return (
     <>
       <div id="hero">
@@ -35,7 +63,9 @@ export const HomePage: React.FC = () => {
         <div id="services" className="relative z-10">
           <ValuePropsSection />
           <HowItWorksSection />
-          <DemoShowcaseSection />
+          <div id="demo">
+            <DemoShowcaseSection />
+          </div>
         </div>
         <SectionDivider />
         <div className="relative z-10">
@@ -46,6 +76,9 @@ export const HomePage: React.FC = () => {
           <CallToActionSection />
         </section>
       </div>
+      {showWelcome && (
+        <WelcomePopup userType={currentUser?.user_type ?? null} onClose={() => setShowWelcome(false)} />
+      )}
     </>
   );
 };
